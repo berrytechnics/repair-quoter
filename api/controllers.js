@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer"
-import ejs from "ejs"
 import { Email } from './mailer.js'
 const camelize = str => {
 	let string = str
@@ -12,12 +11,15 @@ const camelize = str => {
 class leadController{
 	submit(){}
 	update(){}
-	_handleError(){}
+	_handleError(err){
+		console.log(err)
+	}
 }
 class priceListController{
 	create(){}
 	update(){}
-	_handleError(){}
+	_handleError(err){
+		console.log(err)
+	}
 }
-
 export { leadController,priceListController }
