@@ -1,5 +1,6 @@
 import express from "express"
 const router = express.Router()
+import { leadController,priceListController } from './controller.js'
 
 router.get("/getDevices", (req, res) => res.send("Test"))
 

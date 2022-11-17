@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer"
 import ejs from "ejs"
+import { Email } from './mailer.js'
 const camelize = str => {
 	let string = str
 		.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
@@ -8,4 +9,15 @@ const camelize = str => {
 		.replace(/\s+/g, "")
 	return string.charAt(0).toLowerCase() + string.slice(1)
 }
-export default leadController
+class leadController{
+	submit(){}
+	update(){}
+	_handleError(){}
+}
+class priceListController{
+	create(){}
+	update(){}
+	_handleError(){}
+}
+
+export { leadController,priceListController }
