@@ -1,0 +1,23 @@
+{
+  "name": "repair-quoter",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "main": "api/main.js",
+  "scripts": {
+    "server": "node api/main.js",
+    "client": "node client/main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.2",
+    "node-mailer": "^0.1.1"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3"
+  }
+}
