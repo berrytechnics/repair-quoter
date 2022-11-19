@@ -1,18 +1,18 @@
 import nodemailer from "nodemailer"
+import ejs from 'ejs'
 import path from 'path'
 import { fileURLToPath } from "url"
-import ejs from 'ejs'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 class Email {
 	constructor(to, subject, template, data) {
 		this.to = to
 		this.subject = subject 
-		this.template = `${__dirname}/templates/${template}.ejs`
+		this.template = `${__dirname}/${template}.ejs`
 		this.data = data
 	}
 	async send() {
-		let transporter = nodemailer.createTransport({
+		const transporter = nodemailer.createTransport({
 			host: process.env.EMAIL_HOST,
 			port: process.env.EMAIL_PORT,
 			auth: {
@@ -20,20 +20,23 @@ class Email {
 				pass: process.env.EMAIL_PASS,
 			},
 		})
-		transporter.sendMail(
-			{
-				from: process.env.EMAIL_USER,
-				to: this.to,
-				subject: this.subject,
-				html: await ejs.renderFile(this.template),
-			},
-			(err, info) => {
-				err ? this._handleError(err) : info
-			}
-		)
+		const options = {
+			from: process.env.EMAIL_USER,
+			to: this.to,
+			subject: this.subject,
+			html: await ejs.renderFile(this.template,{data:this.data}),
+		}
+		try{
+			const result = await transporter.sendMail(options)
+			return result
+		}
+		catch(err){
+			this._handleError(err)
+		}
+		
 	}
 	_handleError(err) {
-		console.log(err)
+		return err
 	}
 }
 export { Email }

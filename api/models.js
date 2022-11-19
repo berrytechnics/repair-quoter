@@ -1,4 +1,5 @@
-import mongoose, { Mongoose } from "mongoose"
+import mongoose from "mongoose"
+
 const leadSchema = new mongoose.Schema({
 	firstName: String,
 	lastName: String,
@@ -48,15 +49,30 @@ const leadSchema = new mongoose.Schema({
 		default: false,
 	},
 })
-const pricelistSchema = new Mongoose.Schema({
+export const LeadEntry = mongoose.model("Leads", leadSchema)
+
+const pricelistSchema = new mongoose.Schema({
+	type:String,
 	make: String,
 	model: String,
+	fusedDisplay:{
+		type:Boolean,
+		default:false
+	},
 	repairs: {
-		rearGlass: {
+		screenGlass: {
+			type: Number,
+			default: 0.0,
+		},
+		lcd: {
 			type: Number,
 			default: 0.0,
 		},
 		battery: {
+			type: Number,
+			default: 0.0,
+		},
+		chargePort: {
 			type: Number,
 			default: 0.0,
 		},
@@ -68,23 +84,15 @@ const pricelistSchema = new Mongoose.Schema({
 			type: Number,
 			default: 0.0,
 		},
-		chargePort: {
-			type: Number,
-			default: 0.0,
-		},
 		earSpeaker: {
 			type: Number,
 			default: 0.0,
 		},
-		lcd: {
-			type: Number,
-			default: 0.0,
-		},
-		screen: {
-			type: Number,
-			default: 0.0,
-		},
 		loudSpeaker: {
+			type: Number,
+			default: 0.0,
+		},
+		rearGlass: {
 			type: Number,
 			default: 0.0,
 		},
@@ -94,6 +102,4 @@ const pricelistSchema = new Mongoose.Schema({
 		},
 	},
 })
-const Leads = mongoose.model("Leads", leadSchema)
-const Pricelist = mongoose.model("Pricelist", pricelistSchema)
-export { Leads, Pricelist }
+export const Pricelist = mongoose.model("Pricelist", pricelistSchema)

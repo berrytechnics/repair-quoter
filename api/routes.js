@@ -1,12 +1,19 @@
 import express from "express"
 const router = express.Router()
-import { leadController,priceListController } from './controllers.js'
+import {Leads,Devices} from './controllers.js'
 
-
-router.get('/',(req,res)=>res.send(process.env.LOCATIONS))
-
-router.get("/getDevices", (req, res) => res.send("Test"))
-router.get("/requestQuote", (req, res) => res.send("Test"))
-router.post("/updateQuote", (req, res) => res.send("Test"))
-
+router.get("/getQuotes", async (req,res,next) => {
+    let id = req.query.id ? req.query.id : false
+    try{
+        let leads;
+        id ? leads = await Leads.getLead(id) : leads = await Leads.getLead()
+        res.send(leads)
+    }
+    catch(err){
+        next(err)
+    }
+})
+router.post("/requestQuote", async (req, res, next) => res.sendStatus(200))
+router.post("/updateQuote", async (req, res, next) => res.sendStatus(200))
+router.delete("/deleteQuote", async (req,res,next) => res.sendStatus(200))
 export default router
