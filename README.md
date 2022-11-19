@@ -17,12 +17,17 @@ repair-quoter requires access to an [SMTP](https://kinsta.com/blog/gmail-smtp-se
 ```
 npm install repair-quoter
 ```
-
 ## Setup
 
 ### Constants
 
 the `api/constants.js` file contains a simple template to configure the api for your company.
+
+<span style="color:red">
+*You should **never** place any sensitive or private information in this file, as it could be leaked to the frontend* !
+</span>
+
+&nbsp;
 
 ### Environment Variables
 
@@ -52,25 +57,59 @@ npm run server
 
 Request: <span style="color:green">**POST**</span>
 
-sample request
+sample request body
 
 ```
-
+{
+    firstName:"John",
+    lastName:"Doe",
+    location:"Store 1",
+    email:"jDoe@email.com",
+    phone:"9188675309",
+    make:"Apple",
+    model:"iPhone X",
+    issue:"Battery"
+}
 ```
 
-sample response
-
-```
-
-```
-
-### /getQuote
+### /getQuote?id=< id >
 
 Request: <span style="color:green">**GET**</span>
 
-sample response
+requesting `/getQuote` without an ID will return an array containing all quotes
+
+sample request:
 
 ```
+http://localhost:3000/getQuote?id=a987f7g87687d87f676fg
+```
+
+sample response:
+
+```
+{
+    _id:ObjectId("a987f7g87687d87f676fg")
+    firstname:"John",
+    lastname:"Doe",
+    location:"Store 1",
+    email:"jDoe@email.com",
+    phone:"9188675309",
+    make:"Apple",
+    model:"iPhone X",
+    issue:"battery",
+    price:59.99,
+    respondedDate:"",
+    convertedDate:"",
+    convertedUser:"",
+    respondedUser:"",
+    date:"2022-11-19T19:20:15.906Z",
+    modified:"2022-11-19T19:20:15.906Z",
+    emailed:true,
+    responded:false,
+    converted:false,
+    duplicate:false,
+    hidden:false
+}
 
 ```
 
@@ -78,19 +117,37 @@ sample response
 
 Request: <span style="color:green">**POST**</span>
 
-sample request
+sample request body
 
 ```
-
+{
+    id:"a987f7g87687d87f676fg",
+    responded:true,
+    price:59.99
+}
 ```
 
 sample response
 
 ```
-
+{
+    _id:ObjectId("a987f7g87687d87f676fg"),
+    firstName:"John",
+    lastName:"Doe",
+    location:"Store 1",
+    email:"jDoe@email.com",
+    phone:"9188675309",
+    make:"Apple",
+    model:"iPhone X",
+    issue:"Battery",
+    price:59.99,
+    responded:true,
+    respondedDate:'2022-11-19T19:33:03.688Z',
+    respondedUser:"berrytechnics"
+}
 ```
 
-### /deleteQuote
+### /deleteQuote?id=< id >
 
 Request: <span style="color:green">**DELETE**</span>
 

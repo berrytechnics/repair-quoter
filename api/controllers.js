@@ -15,7 +15,7 @@ export const Leads = {
         let leads
         !id
             ? (leads = await LeadEntry.find({}))
-            : (leads = await LeadEntry.find({ id: id }))
+            : (leads = await LeadEntry.findById(id))
         return leads
     },
     updateLead: async (id, updates) => {
@@ -88,7 +88,7 @@ export const Devices = {
         let devices
         !id
             ? (devices = await Pricelist.find({}))
-            : (devices = await Pricelist.find({ id: id }))
+            : (devices = await Pricelist.findById(id))
         devices.forEach((device) => {
             for (let i = 0; i < device.repairs.length; i++) {
                 device.repairs[i] = 0.0
