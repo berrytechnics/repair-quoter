@@ -6,16 +6,16 @@ This project will include a backend api to connect to a database and SMTP server
 Project development begain in November of 2022 and is ongoing.
 
 ## Prerequisites
----
+
 repair-quoter requires access to an [SMTP](https://kinsta.com/blog/gmail-smtp-server/) mail host to send quote emails, as well as a [MongoDB](https://www.mongodb.com/atlas/database) database to store the repair pricelist and leads.
 ## Install
----
+
 [repair-quoter is hosted on NPMJS.org](https://www.npmjs.com/package/repair-quoter)
 ``` 
 npm install repair-quoter
 ```
 ## Setup
----
+
 ### Constants
 
 the ` api/constants.js ` file contains a simple template to configure the api for your company.
@@ -36,12 +36,12 @@ EMAIL_USER = "user@emailhost.com"
 EMAIL_PASS = "userPassword"
 ```
 ## Run
----
+
 ```
 npm run server
 ```
 ## API Endpoints
----
+
 ### /requestquote
 Request: <span style="color:green">**POST**</span>
 
@@ -82,5 +82,5 @@ sample response
 false
 ```
 ## License
----
+
 [GNU GPLv3](./LICENSE.md)
