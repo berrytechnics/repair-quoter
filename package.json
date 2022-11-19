@@ -6,18 +6,19 @@
     "type": "module",
     "main": "api/main.js",
     "scripts": {
-        "format:check": "prettier --check .",
-        "format:write": "prettier --write .",
-        "lint:check": "eslint .",
-        "lint:fix": "eslint --fix .",
-        "server": "node api/main.js"
+        "format:check": "prettier --check ./api/",
+        "format:write": "prettier --write ./api/",
+        "lint:check": "eslint ./api/",
+        "lint:fix": "eslint --fix ./api/",
+        "dev": "nodemon api/main",
+        "build": "prettier --write ./api/ && eslint --fix ./api/ && node api/main.js"
     },
     "author": "Kyle Berry",
     "repository": {
         "type": "git",
         "url": "https://github.com/berrytechnics/repair-quoter"
     },
-    "license": "GNU GPLv3",
+    "license": "GPL-3.0-only",
     "dependencies": {
         "ejs": "^3.1.8",
         "express": "^4.18.2",
@@ -28,6 +29,7 @@
         "dotenv": "^16.0.3",
         "eslint": "^8.28.0",
         "eslint-config-prettier": "^8.5.0",
+        "nodemon": "^2.0.20",
         "prettier": "^2.7.1"
     }
 }
