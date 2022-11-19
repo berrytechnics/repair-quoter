@@ -4,7 +4,7 @@ export default {
         'Store 1': {
             contact: {
                 phone: '0000000000',
-                email: 'store1@emailprovider.com',
+                email: 'store@emailprovider.com',
                 address: {
                     street: '123 S. Main Street',
                     city: 'Tulsa',
