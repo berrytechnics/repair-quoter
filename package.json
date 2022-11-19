@@ -7,7 +7,6 @@
   "main": "api/main.js",
   "scripts": {
     "server": "node api/main.js",
-    "client": "node client/main.js"
   },
   "author": "Kyle Berry",
   "repository": {
