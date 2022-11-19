@@ -6,7 +6,7 @@
   "type": "module",
   "main": "api/main.js",
   "scripts": {
-    "server": "node api/main.js",
+    "server": "node api/main.js"
   },
   "author": "Kyle Berry",
   "repository": {
