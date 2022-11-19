@@ -1,26 +1,33 @@
 {
-  "name": "repair-quoter",
-  "version": "1.0.4",
-  "description": "repair-quoter is a planned replacement of the Phone Doctors 2021 repair quote implementation. ",
-  "private": false,
-  "type": "module",
-  "main": "api/main.js",
-  "scripts": {
-    "server": "node api/main.js"
-  },
-  "author": "Kyle Berry",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/berrytechnics/repair-quoter"
-  },
-  "license": "GNU GPLv3",
-  "dependencies": {
-    "ejs": "^3.1.8",
-    "express": "^4.18.2",
-    "mongoose": "^6.7.2",
-    "nodemailer": "^6.8.0"
-  },
-  "devDependencies": {
-    "dotenv": "^16.0.3"
-  }
+    "name": "repair-quoter",
+    "version": "1.0.4",
+    "description": "repair-quoter is a planned replacement of the Phone Doctors 2021 repair quote implementation. ",
+    "private": false,
+    "type": "module",
+    "main": "api/main.js",
+    "scripts": {
+        "format:check": "prettier --check .",
+        "format:write": "prettier --write .",
+        "lint:check": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "server": "node api/main.js"
+    },
+    "author": "Kyle Berry",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/berrytechnics/repair-quoter"
+    },
+    "license": "GNU GPLv3",
+    "dependencies": {
+        "ejs": "^3.1.8",
+        "express": "^4.18.2",
+        "mongoose": "^6.7.2",
+        "nodemailer": "^6.8.0"
+    },
+    "devDependencies": {
+        "dotenv": "^16.0.3",
+        "eslint": "^8.28.0",
+        "eslint-config-prettier": "^8.5.0",
+        "prettier": "^2.7.1"
+    }
 }
