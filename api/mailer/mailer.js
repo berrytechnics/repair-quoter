@@ -1,13 +1,13 @@
 import nodemailer from "nodemailer"
-import ejs from 'ejs'
-import path from 'path'
+import ejs from "ejs"
+import path from "path"
 import { fileURLToPath } from "url"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 class Email {
 	constructor(to, subject, template, data) {
 		this.to = to
-		this.subject = subject 
+		this.subject = subject
 		this.template = `${__dirname}/${template}.ejs`
 		this.data = data
 	}
@@ -24,16 +24,14 @@ class Email {
 			from: process.env.EMAIL_USER,
 			to: this.to,
 			subject: this.subject,
-			html: await ejs.renderFile(this.template,{data:this.data}),
+			html: await ejs.renderFile(this.template, { data: this.data }),
 		}
-		try{
+		try {
 			const result = await transporter.sendMail(options)
 			return result
-		}
-		catch(err){
+		} catch (err) {
 			this._handleError(err)
 		}
-		
 	}
 	_handleError(err) {
 		return err

@@ -52,12 +52,12 @@ const leadSchema = new mongoose.Schema({
 export const LeadEntry = mongoose.model("Leads", leadSchema)
 
 const pricelistSchema = new mongoose.Schema({
-	type:String,
+	type: String,
 	make: String,
 	model: String,
-	fusedDisplay:{
-		type:Boolean,
-		default:false
+	fusedDisplay: {
+		type: Boolean,
+		default: false,
 	},
 	repairs: {
 		screenGlass: {
