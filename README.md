@@ -21,13 +21,10 @@ npm install repair-quoter
 
 ### Constants
 
-the `api/constants.js` file contains a simple template to configure the api for your company.
+The `api/constants.js` file contains a simple template to configure the api for your company.
 
-<span style="color:red">
-*You should **never** place any sensitive or private information in this file, as it could be leaked to the frontend* !
-</span>
+>*You should **never** place any sensitive or private information in this file!*
 
-&nbsp;
 
 ### Environment Variables
 

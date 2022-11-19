@@ -60,7 +60,7 @@ export const Leads = {
             const message = new Email(
                 email,
                 `Your ${C.brand} Repair Quote is Here!`,
-                'quote',
+                lead.price>0 ? 'quote' : 'noQuote',
                 lead
             )
             const emailResult = await message.send()
