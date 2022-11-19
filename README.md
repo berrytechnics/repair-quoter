@@ -10,6 +10,7 @@ Project development begain in November of 2022 and is ongoing.
 repair-quoter requires access to an [SMTP](https://kinsta.com/blog/gmail-smtp-server/) mail host to send quote emails, as well as a [MongoDB](https://www.mongodb.com/atlas/database) database to store the repair pricelist and leads.
 ## Install
 ---
+[repair-quoter is hosted on NPMJS.org](https://www.npmjs.com/package/repair-quoter)
 ``` 
 npm install repair-quoter
 ```
