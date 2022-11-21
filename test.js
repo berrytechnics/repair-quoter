@@ -24,7 +24,7 @@ async function run() {
             'Testy',
             'McTesterson',
             '71st',
-            'kyle@thephonedoctors.com',
+            process.env.TESTEMAIL,
             9180000000,
             'Apple',
             'iPhone X',
