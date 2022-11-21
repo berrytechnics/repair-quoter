@@ -14,7 +14,7 @@ export const Leads = {
     getLead: async (id = false) => {
         let leads
         !id
-            ? (leads = await LeadEntry.find({}))
+            ? (leads = await LeadEntry.find({"duplicate":{"$ne":true}}))
             : (leads = await LeadEntry.findById(id))
         return leads
     },
@@ -60,7 +60,7 @@ export const Leads = {
             const message = new Email(
                 email,
                 `Your ${C.brand} Repair Quote is Here!`,
-                lead.price>0 ? 'quote' : 'noQuote',
+                lead.price > 0 ? 'quote' : 'noQuote',
                 lead
             )
             const emailResult = await message.send()
@@ -89,11 +89,17 @@ export const Devices = {
         !id
             ? (devices = await Pricelist.find({}))
             : (devices = await Pricelist.findById(id))
-        devices.forEach((device) => {
-            for (let i = 0; i < device.repairs.length; i++) {
-                device.repairs[i] = 0.0
+        if (devices.length > 1) {
+            devices.forEach((device) => {
+                for (let i = 0; i < device.repairs.length; i++) {
+                    device.repairs[i] = 0.0
+                }
+            })
+        } else {
+            for (let i = 0; i < devices.repairs.length; i++) {
+                devices.repairs[i] = 0.0
             }
-        })
+        }
         return devices
     },
     newDevice: async (type, make, model) => {
@@ -133,3 +139,9 @@ export const Devices = {
         }
     },
 }
+// export const User = {
+//     login: ()=>{},
+//     logout: ()=>{},
+//     register: ()=>{},
+//     update: ()=>{}
+// }
