@@ -7,7 +7,7 @@
 //  \-----------------------------------------------/
 
 export default {
-    brand: 'Your Company Name',
+    brand: 'Repair Brand',
     locations: {
         'Store 1': {
             contact: {

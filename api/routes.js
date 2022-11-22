@@ -3,6 +3,7 @@ import { Leads, Devices } from './controllers.js'
 const router = express.Router()
 
 router.get('/test', (req, res) => res.sendStatus(200))
+
 router.get('/getDevice', async (req, res, next) => {
     try {
         let devices
@@ -14,6 +15,29 @@ router.get('/getDevice', async (req, res, next) => {
         next(err)
     }
 })
+router.post('/newDevice', async (req,res,next) => {
+    try{
+        const device = await Devices.newDevice(
+            req.body.type,
+            req.body.make,
+            req.body.model
+        )
+        res.send(device)
+    }
+    catch(err){
+        next(err)
+    }
+})
+router.post('/updateDevice', async (req,res,next) => {
+    try{
+        let updatedDevice = await Devices.updateDevice(req.body.id,req.body.updates)
+        res.send(updatedDevice)
+    } catch(err) {
+        next(err)
+    }
+})
+router.delete('/removeDevice', async (req,res) => res.sendStatus(200))
+
 router.get('/getQuote', async (req, res, next) => {
     try {
         let leads
@@ -60,5 +84,4 @@ router.post('/updateQuote', async (req, res) => {
     next(err)
    }
 })
-
 export default router

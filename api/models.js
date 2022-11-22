@@ -40,10 +40,6 @@ const leadSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    duplicate: {
-        type: Boolean,
-        default: false,
-    },
     hidden: {
         type: Boolean,
         default: false,

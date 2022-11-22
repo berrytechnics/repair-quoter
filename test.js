@@ -1,45 +1,37 @@
 import { Leads, Devices } from './api/controllers.js'
+import {Pricelist,LeadEntry} from './api/models.js'
 import 'dotenv/config'
+import chalk from 'chalk'
 import mongoose from 'mongoose'
-async function run() {
+export default async function test(){
     mongoose.connect(process.env.MONGO_URI)
-    const db = mongoose.connection
-    db.on('error', console.error.bind(console, 'Database connection error:'))
-    db.once('open', () => console.log('API Database connected!'))
-    try {
-        console.log('Running Tests...')
-        // Devices
-        let updates = [{ field: 'battery', content: 99.99 }]
-        const device = await Devices.newDevice(
-            "phone",
-            "Apple",
-            "iPhone X"
-        )
-        const foundDevice = await Devices.getDevice(device._id)
-        await Devices.updateDevice(foundDevice._id,updates)        
-        // Leads
-        updates = [{ field: 'firstName', content: 'TestyTwo' }]
-        await Leads.getLead()
+    try{
+        const device = await Devices.newDevice('phone','Apple','iPhone X')
+        const prices = await Devices.updateDevice(device._id,[
+            'chargePort',69.99,
+            'frontCamera',89.99,
+            'battery',54.99,
+            'lcd',109.99,
+            'rearCamera',119.99,
+            'earSpeaker',49.99,
+            'loudSpeaker',69.99,
+            'rearGlass',149.99
+        ])
+        console.log(prices)
         const lead = await Leads.newLead(
-            'Testy',
-            'McTesterson',
-            '71st',
-            process.env.TESTEMAIL,
-            9180000000,
-            'Apple',
-            'iPhone X',
-            'battery'
+            'Testy','McTesterson','Test',
+            process.env.TESTEMAIL,'918',
+            'Apple','iPhone X','rearGlass'
         )
-        const foundLead = await Leads.getLead(lead._id)
-        await Leads.updateLead(foundLead._id, updates)
-        await Leads.removeLead(lead._id)
-        // Cleanup and close connection
-        await Devices.removeDevice(foundDevice._id)
-        mongoose.connection.close()
-        return console.log('All Tests Passed!')
-    } catch (err) {
-        mongoose.connection.close()
-        return console.log(err)
+        console.log(lead)
+        await Pricelist.deleteMany({nonsense:false})
+        await LeadEntry.deleteMany({nonsense:false})
     }
-}
-run()
+    catch(e){
+        await Pricelist.deleteMany({nonsense:false})
+        await LeadEntry.deleteMany({nonsense:false})
+        console.log(e)
+    }
+    mongoose.connection.close()
+    process.exit(0)
+}test()

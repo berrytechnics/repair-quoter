@@ -35,6 +35,8 @@ repair-quoter uses the following [environment variables](https://devcenter.herok
 > Your Environment variables _could_ look something like this:
 
 ```
+PORT = 3000 // this is the port for the development server
+TESTEMAIL = "test@test.test" /* this is the email address test emails are sent to */
 MONGO_URI = "mongodb+srv://<user>:<password>@cluster0.exampleURI.mongodb.net/?retryWrites=true&w=majority"
 EMAIL_HOST = "smtp.emailhost.com"
 EMAIL_PORT = 587
@@ -42,118 +44,218 @@ EMAIL_USER = "user@emailhost.com"
 EMAIL_PASS = "userPassword"
 ```
 
-## Run
+## Usage
 
+Test
+
+```
+npm run test
+```
+
+Start
 ```
 npm run server
 ```
 
 ## API Endpoints
 
-### /requestquote
-
-Request: <span style="color:green">**POST**</span>
-
-sample request body
-
-```
-{
-    firstName:"John",
-    lastName:"Doe",
-    location:"Store 1",
-    email:"jDoe@email.com",
-    phone:"9188675309",
-    make:"Apple",
-    model:"iPhone X",
-    issue:"Battery"
-}
-```
-
-### /getQuote?id=< id >
-
+### /getDevice?id=< id >
 Request: <span style="color:green">**GET**</span>
 
-requesting `/getQuote` without an ID will return an array containing all quotes
-
-sample request:
-
+Response: 
 ```
-http://localhost:3000/getQuote?id=a987f7g87687d87f676fg
+[
+   {
+    repairs: {
+      screenGlass: 0,
+      lcd: 0,
+      battery: 54.99,
+      chargePort: 0,
+      frontCamera: 0,
+      rearCamera: 0,
+      earSpeaker: 0,
+      loudSpeaker: 0,
+      rearGlass: 0,
+      liquidDamage: 0
+    },
+    _id: new ObjectId("637c128d2359c98abccc6bc3"),
+    type: 'phone',
+    make: 'Apple',
+    model: 'iPhone X',
+    fusedDisplay: false,
+    __v: 0
+  }
+]
 ```
-
-sample response:
-
-```
-{
-    _id:ObjectId("a987f7g87687d87f676fg")
-    firstname:"John",
-    lastname:"Doe",
-    location:"Store 1",
-    email:"jDoe@email.com",
-    phone:"9188675309",
-    make:"Apple",
-    model:"iPhone X",
-    issue:"battery",
-    price:59.99,
-    respondedDate:"",
-    convertedDate:"",
-    convertedUser:"",
-    respondedUser:"",
-    date:"2022-11-19T19:20:15.906Z",
-    modified:"2022-11-19T19:20:15.906Z",
-    emailed:true,
-    responded:false,
-    converted:false,
-    duplicate:false,
-    hidden:false
-}
-
-```
-
-### /updateQuote
-
+### /newDevice
 Request: <span style="color:green">**POST**</span>
-
-sample request body
-
 ```
 {
-    id:"a987f7g87687d87f676fg",
-    responded:true,
-    price:59.99
+  type:'phone',
+  make:'Apple',
+  model:'iPhone X'
 }
 ```
-
-sample response
-
+Response: 
 ```
 {
-    _id:ObjectId("a987f7g87687d87f676fg"),
-    firstName:"John",
-    lastName:"Doe",
-    location:"Store 1",
-    email:"jDoe@email.com",
-    phone:"9188675309",
-    make:"Apple",
-    model:"iPhone X",
-    issue:"Battery",
-    price:59.99,
-    responded:true,
-    respondedDate:'2022-11-19T19:33:03.688Z',
-    respondedUser:"berrytechnics"
+  _id: new ObjectId("637c128d2359c98abccc6bc3"),
+    type: 'phone',
+    make: 'Apple',
+    model: 'iPhone X',
+    fusedDisplay: false,
+    __v: 0
 }
 ```
-
-### /deleteQuote?id=< id >
-
+### /updateDevice
+Request: <span style="color:green">**PUT**</span>
+```
+{
+  id:< device._id >,
+  updates:[
+    'battery',54.99
+  ]
+}
+```
+Response: 
+```
+ {
+  repairs: {
+    screenGlass: 0,
+    lcd: 0,
+    battery: 54.99,
+    chargePort: 0,
+    frontCamera: 0,
+    rearCamera: 0,
+    earSpeaker: 0,
+    loudSpeaker: 0,
+    rearGlass: 0,
+    liquidDamage: 0
+  },
+  _id: new ObjectId("637c128d2359c98abccc6bc3"),
+  type: 'phone',
+  make: 'Apple',
+  model: 'iPhone X',
+  fusedDisplay: false,
+  __v: 0
+}
+```
+### /removeDevice?id=< id >
 Request: <span style="color:green">**DELETE**</span>
 
-sample response
-
+Response: 
 ```
-false
+ false
+```
+### /getQuote?id=< id >
+Request: <span style="color:green">**GET**</span>
+
+Response: 
+```
+ {
+  firstName: 'Testy',
+  lastName: 'McTesterson',
+  location: 'Test',
+  email: 'test@mail.com',
+  phone: '918',
+  make: 'Apple',
+  model: 'iPhone X',
+  issue: 'rearGlass',
+  price: 149.99,
+  convertedUser: '',
+  respondedUser: '',
+  date: 2022-11-22T00:06:37.467Z,
+  modified: 2022-11-22T00:06:37.467Z,
+  emailed: false,
+  responded: false,
+  converted: false,
+  duplicate: false,
+  hidden: false,
+  _id: new ObjectId("637c128f2359c98abccc6bc8"),
+  __v: 0
+}
+```
+### /submitQuote
+Request: <span style="color:green">**POST**</span>
+```
+{
+  firstName: 'Testy',
+  lastName: 'McTesterson',
+  location: 'Test',
+  email: 'test@mail.com',
+  phone: '918',
+  make: 'Apple',
+  model: 'iPhone X',
+  issue: 'rearGlass'
+}
+```
+Response: 
+```
+{
+  firstName: 'Testy',
+  lastName: 'McTesterson',
+  location: 'Test',
+  email: 'test@mail.com',
+  phone: '918',
+  make: 'Apple',
+  model: 'iPhone X',
+  issue: 'rearGlass',
+  convertedUser: '',
+  respondedUser: '',
+  date: 2022-11-22T00:06:37.467Z,
+  modified: 2022-11-22T00:06:37.467Z,
+  emailed: true,
+  responded: false,
+  converted: false,
+  duplicate: false,
+  hidden: false,
+  _id: new ObjectId("637c128f2359c98abccc6bc8"),
+  __v: 0
+}
+```
+### /updateQuote
+Request: <span style="color:green">**PUT**</span>
+```
+{
+  id:< lead._id >,
+  updates:[
+    'responded',true
+  ]
+}
+```
+Response: 
+```
+{
+  firstName: 'Testy',
+  lastName: 'McTesterson',
+  location: 'Test',
+  email: 'test@mail.com',
+  phone: '918',
+  make: 'Apple',
+  model: 'iPhone X',
+  issue: 'rearGlass',
+  convertedUser: '',
+  respondedUser: '',
+  date: 2022-11-22T00:06:37.467Z,
+  modified: 2022-11-22T00:06:37.467Z,
+  emailed: true,
+  responded: true,
+  converted: false,
+  duplicate: false,
+  hidden: false,
+  _id: new ObjectId("637c128f2359c98abccc6bc8"),
+  __v: 0
+}
+```
+### /removeQuote?id=< id >
+Request: <span style="color:green">**DELETE**</span>
+
+Response: 
+```
+ false
 ```
 
 ## License
 
 [GNU GPLv3](./LICENSE.md)
+

@@ -12,7 +12,8 @@
         "lint:fix": "eslint --fix ./api/",
         "dev": "nodemon api/main",
         "build": "prettier --write ./api/ && eslint --fix ./api/ && node api/main.js",
-        "test": "node test"
+        "test": "node test",
+        "start":"node api/main"
     },
     "author": "Kyle Berry",
     "repository": {
@@ -22,11 +23,14 @@
     "license": "GPL-3.0-only",
     "dependencies": {
         "ejs": "^3.1.8",
+        "email-validator": "^2.0.4",
         "express": "^4.18.2",
         "mongoose": "^6.7.2",
-        "nodemailer": "^6.8.0"
+        "nodemailer": "^6.8.0",
+        "nodemailer-html-to-text": "^3.2.0"
     },
     "devDependencies": {
+        "chalk": "^5.1.2",
         "dotenv": "^16.0.3",
         "eslint": "^8.28.0",
         "eslint-config-prettier": "^8.5.0",

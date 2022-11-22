@@ -51,10 +51,11 @@ export const Leads = {
             make: make,
             model: model,
             issue: issue,
+            price: 0
         })
         // get quote price...
-        const prices = await Pricelist.find({ model: lead.model })
-        lead.price = prices[camelize(lead.issue)] || 0
+        const prices = await Pricelist.findOne({ model: lead.model })
+        lead.price = prices.repairs[camelize(lead.issue)] || 0
         // save to database & send email...
         try {
             const message = new Email(
@@ -64,13 +65,11 @@ export const Leads = {
                 lead
             )
             const emailResult = await message.send()
-            emailResult.accepted.length > 0 ? (lead.emailed = true) : null
+            lead.emailed = emailResult
             await lead.save()
             return lead
         } catch (e) {
-            // handle errors...
-            console.log(e)
-            throw new Error(e)
+            throw e
         }
     },
     removeLead: async (id) => {
@@ -118,9 +117,9 @@ export const Devices = {
     },
     updateDevice: async (id, updates) => {
         const device = await Pricelist.findById(id)
-        updates.forEach((update) => {
-            device[update.repair] = update.price
-        })
+        for(let i=0; i<updates.length; i+=2){
+            device.repairs[updates[i]] = updates[i+1]
+        }
         try {
             await device.save()
             return device
@@ -139,9 +138,3 @@ export const Devices = {
         }
     },
 }
-// export const User = {
-//     login: ()=>{},
-//     logout: ()=>{},
-//     register: ()=>{},
-//     update: ()=>{}
-// }

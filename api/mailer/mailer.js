@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer'
+import mailerText from 'nodemailer-html-to-text'
 import ejs from 'ejs'
+import * as EmailValidator from 'email-validator'
 import path from 'path'
 import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
@@ -12,6 +14,9 @@ class Email {
         this.data = data
     }
     async send() {
+        let emailSent = false
+        const validation = EmailValidator.validate(this.to)
+        if(!validation) throw 'Invalid email address!'
         const transporter = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,
@@ -20,6 +25,7 @@ class Email {
                 pass: process.env.EMAIL_PASS,
             },
         })
+        transporter.use('compile',mailerText.htmlToText())
         const options = {
             from: process.env.EMAIL_USER,
             to: this.to,
@@ -28,13 +34,11 @@ class Email {
         }
         try {
             const result = await transporter.sendMail(options)
-            return result
+            result.accepted ? emailSent = true : null
+            return emailSent
         } catch (err) {
-            this._handleError(err)
+            throw err
         }
-    }
-    _handleError(err) {
-        return err
     }
 }
 export { Email }
