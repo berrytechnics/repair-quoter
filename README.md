@@ -59,6 +59,13 @@ npm start
 
 ## API Endpoints
 
+### **/**
+Request: <span style="font-size:1.5rem;color:green">**ANY**</span>
+
+Response:
+```
+OK
+```
 ### **/devices**
 Request: <span style="font-size:1.5rem;color:green">**GET**</span>
 
