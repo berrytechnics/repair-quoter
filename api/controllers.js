@@ -10,15 +10,21 @@ const camelize = (str) => {
     string === 'lCD' ? (string = 'lcd') : null
     return string.charAt(0).toLowerCase() + string.slice(1)
 }
+const pageOpts = {
+    limit: 25,
+    lean: true,
+}
 export const Leads = {
-    getLead: async (id = false, pageNum=1) => {
+    getLead: async (id = false, pageNum = 1) => {
         let page
-        if (!id){
-            pageNum === 'pageless'
-            ? page = {docs:await LeadEntry.find({})}
-            : page = await LeadEntry.paginate({ page: pageNum })
-        }
-        else
+        if (!id) {
+            page = await LeadEntry.paginate({
+                pagination: pageNum === 'pageless' ? false : true,
+                page: pageNum !== 'pageless' ? pageNum : 1,
+                limit: pageOpts.limit,
+                lean: pageOpts.lean,
+            })
+        } else
             page = {
                 docs: [await LeadEntry.findById(id)],
                 totalDocs: 1,
@@ -95,12 +101,15 @@ export const Leads = {
 export const Devices = {
     getDevice: async (id = false, pageNum = 1) => {
         let page
-        if (!id){
-            pageNum==='pageless'
-            ? page = {docs:await Pricelist.find({})}
-            : page = await Pricelist.paginate({ page: pageNum })
-        }
-        else page = {
+        if (!id) {
+            page = await Pricelist.paginate({
+                pagination: pageNum === 'pageless' ? false : true,
+                page: pageNum !== 'pageless' ? pageNum : 1,
+                limit: pageOpts.limit,
+                lean: pageOpts.lean,
+            })
+        } else
+            page = {
                 docs: [await Pricelist.findById(id)],
                 totalDocs: 1,
                 offset: 0,
@@ -113,17 +122,21 @@ export const Devices = {
                 prevPage: null,
                 nextPage: null,
             }
-        if (pageNum!=='pageless' && page.totalDocs > 1) {
+        if (pageNum !== 'pageless' && page.totalDocs > 1) {
             page.docs.forEach((device) => {
                 for (let i = 0; i < device.repairs.length; i++) {
                     device.repairs[i] = 0.0
                 }
             })
-        } else if (pageNum!=='pageless' && page.totalDocs === 1 && page.docs[0].repairs) {
+        } else if (
+            pageNum !== 'pageless' &&
+            page.totalDocs === 1 &&
+            page.docs[0].repairs
+        ) {
             for (let i = 0; i < page.docs[0].repairs.length; i++) {
                 page.docs[0].repairs[i] = 0.0
             }
-        } else if(pageNum!=='pageless')
+        } else if (pageNum !== 'pageless')
             page = {
                 docs: [],
                 totalDocs: 0,

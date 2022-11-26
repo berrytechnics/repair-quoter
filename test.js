@@ -44,6 +44,8 @@ const cleanup = async(lead,device)=>{
     return false
 }
 
+
+
 async function run(){
     try{
         mongoose.connect(process.env.MONGO_URI)
@@ -55,12 +57,13 @@ async function run(){
         const lead = await createLead()
         const result = [
             await Leads.getLead(false,'pageless'),
-            await Devices.getDevice(false,'pageless'),
+            await Devices.getDevice(false,'pageless')
         ]
-        result.forEach(res=>res.docs[0] = JSON.stringify(res.docs[0]))
         console.log(chalk.cyan('Cleaning up...'))
         await cleanup(lead,device)
         console.log(chalk.green('RESULTS:'))
+        result[0].docs = JSON.stringify(result[0].docs)
+        result[1].docs = JSON.stringify(result[1].docs)
         console.log(result)
         await mongoose.connection.close()
         process.exit(0)
