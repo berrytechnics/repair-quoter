@@ -136,7 +136,7 @@ Request: <span style="font-size:1.5rem;color:green">**PUT**</span>
   type: < updates >,
   make: < updates >,
   model: < updates >,
-  fusedDisplay: false,
+  fusedDisplay: < updates >,
   __v: 0
 }
 ```
@@ -159,7 +159,7 @@ Response:
   type: < updates >,
   make: < updates >,
   model: < updates >,
-  fusedDisplay: false,
+  fusedDisplay: < updates >,
   __v: 0
 }
 ```
