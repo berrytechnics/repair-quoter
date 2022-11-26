@@ -6,10 +6,10 @@ import cors from 'cors'
 import routes from './routes.js'
 const app = express()
 app.use(cors())
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/', routes)
-app.use((err, req, res, next) =>{
+app.use((err, req, res, next) => {
     err ? console.log(err) : null
     !err ? next() : res.status(500).send(err)
 })

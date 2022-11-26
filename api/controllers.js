@@ -11,15 +11,29 @@ const camelize = (str) => {
     return string.charAt(0).toLowerCase() + string.slice(1)
 }
 export const Leads = {
-    getLead: async (id = false) => {
-        let leads
-        !id
-            ? (leads = await LeadEntry.find({hidden:false}))
-            : (leads = await LeadEntry.findById(id))
-        return leads
+    getLead: async (id = false, pageNum = 1) => {
+        let page
+        if (!id) page = await LeadEntry.paginate({ page: pageNum })
+        else
+            page = {
+                docs: [await LeadEntry.findById(id)],
+                totalDocs: 1,
+                offset: 0,
+                limit: 10,
+                totalPages: 1,
+                page: 1,
+                pagingCounter: 1,
+                hasPrevPage: false,
+                hasNextPage: false,
+                prevPage: null,
+                nextPage: null,
+            }
+        return page
     },
     updateLead: async (lead) => {
-        const updatedLead = await LeadEntry.findByIdAndUpdate(lead._id,lead,{new:true})
+        const updatedLead = await LeadEntry.findByIdAndUpdate(lead._id, lead, {
+            new: true,
+        })
         await updatedLead.save()
         return updatedLead
     },
@@ -44,14 +58,19 @@ export const Leads = {
             model: model,
             issue: issue,
             price: 0,
-            hidden:false
+            hidden: false,
         })
         // get quote price...
         const prices = await Pricelist.findOne({ model: lead.model })
-        prices ? lead.price = prices.repairs[camelize(lead.issue)] || 0 : 0
+        prices ? (lead.price = prices.repairs[camelize(lead.issue)] || 0) : 0
         //check for duplicate lead
-        let duplicates = await LeadEntry.find({email:email,model:model,issue:issue,price:lead.price})
-        duplicates.length>0 ? lead.hidden=true:lead.hidden=false
+        let duplicates = await LeadEntry.find({
+            email: email,
+            model: model,
+            issue: issue,
+            price: lead.price,
+        })
+        duplicates.length > 0 ? (lead.hidden = true) : (lead.hidden = false)
         // save to database & send email...
         const message = new Email(
             email,
@@ -70,27 +89,51 @@ export const Leads = {
     },
 }
 export const Devices = {
-    getDevice: async (id = false) => {
-        let devices
-        !id
-            ? (devices = await Pricelist.find({}))
-            : (devices = await Pricelist.findById(id))
-        if (devices.length > 1) {
-            devices.forEach((device) => {
+    getDevice: async (id = false, pageNum = 1) => {
+        let page
+        if (!id) page = await Pricelist.paginate({ page: pageNum })
+        else
+            page = {
+                docs: [await Pricelist.findById(id)],
+                totalDocs: 1,
+                offset: 0,
+                limit: 10,
+                totalPages: 1,
+                page: 1,
+                pagingCounter: 1,
+                hasPrevPage: false,
+                hasNextPage: false,
+                prevPage: null,
+                nextPage: null,
+            }
+        if (page.totalDocs > 1) {
+            page.docs.forEach((device) => {
                 for (let i = 0; i < device.repairs.length; i++) {
                     device.repairs[i] = 0.0
                 }
             })
-        } else if(devices.repairs) {
-            for (let i = 0; i < devices.repairs.length; i++) {
-                devices.repairs[i] = 0.0
+        } else if (page.totalDocs === 1 && page.docs[0].repairs) {
+            for (let i = 0; i < page.docs[0].repairs.length; i++) {
+                page.docs[0].repairs[i] = 0.0
             }
-        }
-        else return false
-        return devices
+        } else
+            page = {
+                docs: [],
+                totalDocs: 0,
+                offset: 0,
+                limit: 10,
+                totalPages: 1,
+                page: 1,
+                pagingCounter: 1,
+                hasPrevPage: false,
+                hasNextPage: false,
+                prevPage: null,
+                nextPage: null,
+            }
+        return page
     },
     newDevice: async (type, make, model) => {
-        if(!type||!make||!model) throw 'Missing device information!'
+        if (!type || !make || !model) throw 'Missing device information!'
         const device = new Pricelist({
             type: type,
             make: make,
@@ -100,7 +143,9 @@ export const Devices = {
         return device
     },
     updateDevice: async (lead) => {
-        const device = await Pricelist.findByIdAndUpdate(lead._id,lead,{new:true})
+        const device = await Pricelist.findByIdAndUpdate(lead._id, lead, {
+            new: true,
+        })
         await device.save()
         return device
     },

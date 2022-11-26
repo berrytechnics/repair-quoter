@@ -5,13 +5,14 @@ const router = express.Router()
 router.all('/', (req, res) => res.sendStatus(200))
 // devices
 router
-    .get('/devices',  async (req, res, next) => {
+    .get('/devices', async (req, res, next) => {
         try {
-            let devices
-            req.query.id
-                ? (devices = await Devices.getDevice(req.query.id))
-                : (devices = await Devices.getDevice())
-            res.send(devices)
+            res.send(
+                await Devices.getDevice(
+                    req.query.id || false,
+                    req.query.page || 1
+                )
+            )
         } catch (err) {
             next(err)
         }
@@ -49,11 +50,9 @@ router
 router
     .get('/leads', async (req, res, next) => {
         try {
-            let leads
-            req.query.id
-                ? (leads = await Leads.getLead(req.query.id))
-                : (leads = await Leads.getLead())
-            res.send(leads)
+            res.send(
+                await Leads.getLead(req.query.id || false, req.query.page || 1)
+            )
         } catch (err) {
             next(err)
         }

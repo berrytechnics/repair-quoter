@@ -68,35 +68,26 @@ OK
 ```
 ### **/devices**
 Request: <span style="font-size:1.5rem;color:green">**GET**</span>
-
-*Requesting witohut an < id > will return a paginated list of all devices.*
 ```
-/devices?id=< id >
+/devices?id=< id > 
+or 
+/devices?page=< page number >
 ```
 Response: 
 ```
-[
-   {
-    repairs: {
-      screenGlass: 0,
-      lcd: 0,
-      battery: 54.99,
-      chargePort: 0,
-      frontCamera: 0,
-      rearCamera: 0,
-      earSpeaker: 0,
-      loudSpeaker: 0,
-      rearGlass: 0,
-      liquidDamage: 0
-    },
-    _id: new ObjectId(< id >),
-    type: 'phone',
-    make: 'Apple',
-    model: 'iPhone X',
-    fusedDisplay: false,
-    __v: 0
+{
+    docs: < deviceObjectArray >,
+    totalDocs: < totalDevices >,
+    offset: 0,
+    limit: 10,
+    totalPages: < totalPages >,
+    page: < currentPage >,
+    pagingCounter: 1,
+    hasPrevPage: < true/false >,
+    hasNextPage: < true/false >,
+    prevPage: < # >,
+    nextPage: < # >             
   }
-]
 ```
 Request: <span style="font-size:1.5rem;color:green">**POST**</span>
 ```
@@ -176,35 +167,26 @@ Response:
 
 ### **/leads**
 Request: <span style="font-size:1.5rem;color:green">**GET**</span>
-
-*Requesting without an < id > will return a paginated list of leads.*
 ```
 /leads?id=< id >
+or
+/leads?page=< page number >
 ```
 Response: 
 ```
- {
-  firstName: 'Testy',
-  lastName: 'McTesterson',
-  location: 'Test',
-  email: 'test@mail.com',
-  phone: '918',
-  make: 'Apple',
-  model: 'iPhone X',
-  issue: 'rearGlass',
-  price: 149.99,
-  convertedUser: '',
-  respondedUser: '',
-  date: 2022-11-22T00:06:37.467Z,
-  modified: 2022-11-22T00:06:37.467Z,
-  emailed: false,
-  responded: false,
-  converted: false,
-  duplicate: false,
-  hidden: false,
-  _id: new ObjectId("< id >"),
-  __v: 0
-}
+{
+  docs: < leadsObjectArray >,
+  totalDocs: < totalLeads >,
+  offset: 0,
+  limit: 10,
+  totalPages: < totalPages >,
+  page: < currentPage >,
+  pagingCounter: 1,
+  hasPrevPage: < true/false >,
+  hasNextPage: < true/false >,
+  prevPage: < # >,
+  nextPage: < # >             
+  }
 ```
 Request: <span style="font-size:1.5rem;color:green">**POST**</span>
 ```

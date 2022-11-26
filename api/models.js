@@ -3,36 +3,36 @@ import mongoosePaginate from 'mongoose-paginate-v2'
 
 const leadSchema = new mongoose.Schema({
     firstName: {
-        type:String,
-        immutable:true
+        type: String,
+        immutable: true,
     },
     lastName: {
-        type:String,
-        immutable:true
+        type: String,
+        immutable: true,
     },
     location: {
-        type:String,
-        immutable:true
+        type: String,
+        immutable: true,
     },
     email: {
-        type:String,
-        immutable:true
+        type: String,
+        immutable: true,
     },
     phone: {
-        type:String,
-        immutable:true
+        type: String,
+        immutable: true,
     },
     make: {
-        type:String,
-        immutable:true
+        type: String,
+        immutable: true,
     },
     model: {
-        type:String,
-        immutable:true
+        type: String,
+        immutable: true,
     },
     issue: {
-        type:String,
-        immutable:true
+        type: String,
+        immutable: true,
     },
     price: Number,
     respondedDate: Date,
@@ -71,7 +71,7 @@ const leadSchema = new mongoose.Schema({
     },
 })
 leadSchema.plugin(mongoosePaginate)
-const leadModel = mongoose.model('Leads',leadSchema)
+const leadModel = mongoose.model('Leads', leadSchema)
 export const LeadEntry = leadModel
 
 const pricelistSchema = new mongoose.Schema({
@@ -126,5 +126,5 @@ const pricelistSchema = new mongoose.Schema({
     },
 })
 pricelistSchema.plugin(mongoosePaginate)
-const priceModel = mongoose.model('Pricelist',pricelistSchema)
+const priceModel = mongoose.model('Pricelist', pricelistSchema)
 export const Pricelist = priceModel
