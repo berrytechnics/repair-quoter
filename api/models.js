@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 const leadSchema = new mongoose.Schema({
     firstName: {
@@ -69,7 +70,9 @@ const leadSchema = new mongoose.Schema({
         default: false,
     },
 })
-export const LeadEntry = mongoose.model('Leads', leadSchema)
+leadSchema.plugin(mongoosePaginate)
+const leadModel = mongoose.model('Leads',leadSchema)
+export const LeadEntry = leadModel
 
 const pricelistSchema = new mongoose.Schema({
     type: String,
@@ -122,4 +125,6 @@ const pricelistSchema = new mongoose.Schema({
         },
     },
 })
-export const Pricelist = mongoose.model('Pricelist', pricelistSchema)
+pricelistSchema.plugin(mongoosePaginate)
+const priceModel = mongoose.model('Pricelist',pricelistSchema)
+export const Pricelist = priceModel
