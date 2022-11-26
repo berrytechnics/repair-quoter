@@ -16,8 +16,7 @@ const createDevice = async()=>{
 const createLead = async()=>{
     const lead = await Leads.newLead(
         'Test','Test','71st',
-        'kyle@thephonedoctors.com',
-        9186506195,
+        'test@email.com',0000000000,
         'Apple','iPhone X','battery'
     )
     return lead
