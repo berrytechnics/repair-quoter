@@ -1,14 +1,38 @@
 import mongoose from 'mongoose'
 
 const leadSchema = new mongoose.Schema({
-    firstName: String,
-    lastName: String,
-    location: String,
-    email: String,
-    phone: String,
-    make: String,
-    model: String,
-    issue: String,
+    firstName: {
+        type:String,
+        immutable:true
+    },
+    lastName: {
+        type:String,
+        immutable:true
+    },
+    location: {
+        type:String,
+        immutable:true
+    },
+    email: {
+        type:String,
+        immutable:true
+    },
+    phone: {
+        type:String,
+        immutable:true
+    },
+    make: {
+        type:String,
+        immutable:true
+    },
+    model: {
+        type:String,
+        immutable:true
+    },
+    issue: {
+        type:String,
+        immutable:true
+    },
     price: Number,
     respondedDate: Date,
     convertedDate: Date,
