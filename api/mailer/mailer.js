@@ -16,7 +16,7 @@ class Email {
     async send() {
         let emailSent = false
         const validation = EmailValidator.validate(this.to)
-        if(!validation) throw 'Invalid email address!'
+        if (!validation) throw 'Invalid email address!'
         const transporter = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,
@@ -25,20 +25,16 @@ class Email {
                 pass: process.env.EMAIL_PASS,
             },
         })
-        transporter.use('compile',mailerText.htmlToText())
+        transporter.use('compile', mailerText.htmlToText())
         const options = {
             from: process.env.EMAIL_USER,
             to: this.to,
             subject: this.subject,
-            html: await ejs.renderFile(this.template, { data: this.data }),
+            html: await ejs.renderFile(this.template, this.data),
         }
-        try {
-            const result = await transporter.sendMail(options)
-            result.accepted ? emailSent = true : null
-            return emailSent
-        } catch (err) {
-            throw err
-        }
+        const result = await transporter.sendMail(options)
+        result.accepted && this.data.price > 0 ? (emailSent = true) : null
+        return emailSent
     }
 }
 export { Email }

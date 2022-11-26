@@ -54,14 +54,18 @@ npm run test
 
 Start
 ```
-npm run server
+npm start
 ```
 
 ## API Endpoints
 
-### /getDevice?id=< id >
-Request: <span style="color:green">**GET**</span>
+### **/devices**
+Request: <span style="font-size:1.5rem;color:green">**GET**</span>
 
+*Requesting witohut an < id > will return a paginated list of all devices.*
+```
+/devices?id=< id >
+```
 Response: 
 ```
 [
@@ -78,7 +82,7 @@ Response:
       rearGlass: 0,
       liquidDamage: 0
     },
-    _id: new ObjectId("637c128d2359c98abccc6bc3"),
+    _id: new ObjectId(< id >),
     type: 'phone',
     make: 'Apple',
     model: 'iPhone X',
@@ -87,8 +91,7 @@ Response:
   }
 ]
 ```
-### /newDevice
-Request: <span style="color:green">**POST**</span>
+Request: <span style="font-size:1.5rem;color:green">**POST**</span>
 ```
 {
   type:'phone',
@@ -107,49 +110,70 @@ Response:
     __v: 0
 }
 ```
-### /updateDevice
-Request: <span style="color:green">**PUT**</span>
+Request: <span style="font-size:1.5rem;color:green">**PUT**</span>
 ```
-{
-  id:< device._id >,
-  updates:[
-    'battery',54.99
-  ]
+ {
+  repairs: {
+    screenGlass: < updates >,
+    lcd: < updates >,
+    battery: < updates >,
+    chargePort: < updates >,
+    frontCamera: < updates >,
+    rearCamera: < updates >,
+    earSpeaker: < updates >,
+    loudSpeaker: < updates >,
+    rearGlass: < updates >,
+    liquidDamage: < updates >
+  },
+  _id: new ObjectId("637c128d2359c98abccc6bc3"),
+  type: < updates >,
+  make: < updates >,
+  model: < updates >,
+  fusedDisplay: false,
+  __v: 0
 }
 ```
 Response: 
 ```
  {
   repairs: {
-    screenGlass: 0,
-    lcd: 0,
-    battery: 54.99,
-    chargePort: 0,
-    frontCamera: 0,
-    rearCamera: 0,
-    earSpeaker: 0,
-    loudSpeaker: 0,
-    rearGlass: 0,
-    liquidDamage: 0
+    screenGlass: < updates >,
+    lcd: < updates >,
+    battery: < updates >,
+    chargePort: < updates >,
+    frontCamera: < updates >,
+    rearCamera: < updates >,
+    earSpeaker: < updates >,
+    loudSpeaker: < updates >,
+    rearGlass: < updates >,
+    liquidDamage: < updates >
   },
   _id: new ObjectId("637c128d2359c98abccc6bc3"),
-  type: 'phone',
-  make: 'Apple',
-  model: 'iPhone X',
+  type: < updates >,
+  make: < updates >,
+  model: < updates >,
   fusedDisplay: false,
   __v: 0
 }
 ```
-### /removeDevice?id=< id >
-Request: <span style="color:green">**DELETE**</span>
-
+Request: <span style="font-size:1.5rem;color:green">**DELETE**</span>
+```
+/devices?id=< id >
+```
 Response: 
 ```
  false
 ```
-### /getQuote?id=< id >
-Request: <span style="color:green">**GET**</span>
 
+---
+
+### **/leads**
+Request: <span style="font-size:1.5rem;color:green">**GET**</span>
+
+*Requesting without an < id > will return a paginated list of leads.*
+```
+/leads?id=< id >
+```
 Response: 
 ```
  {
@@ -171,12 +195,11 @@ Response:
   converted: false,
   duplicate: false,
   hidden: false,
-  _id: new ObjectId("637c128f2359c98abccc6bc8"),
+  _id: new ObjectId("< id >"),
   __v: 0
 }
 ```
-### /submitQuote
-Request: <span style="color:green">**POST**</span>
+Request: <span style="font-size:1.5rem;color:green">**POST**</span>
 ```
 {
   firstName: 'Testy',
@@ -213,14 +236,16 @@ Response:
   __v: 0
 }
 ```
-### /updateQuote
-Request: <span style="color:green">**PUT**</span>
+Request: <span style="font-size:1.5rem;color:green">**PUT**</span>
 ```
 {
-  id:< lead._id >,
-  updates:[
-    'responded',true
-  ]
+  price: < updates >,
+  responded: < updates >,
+  converted: < updates >,
+  duplicate: < updates >,
+  hidden: < updates >,
+  _id: new ObjectId("637c128f2359c98abccc6bc8"),
+  __v: 0
 }
 ```
 Response: 
@@ -234,22 +259,24 @@ Response:
   make: 'Apple',
   model: 'iPhone X',
   issue: 'rearGlass',
+  price: < updates >,
   convertedUser: '',
   respondedUser: '',
   date: 2022-11-22T00:06:37.467Z,
   modified: 2022-11-22T00:06:37.467Z,
   emailed: true,
-  responded: true,
-  converted: false,
-  duplicate: false,
-  hidden: false,
+  responded: < updates >,
+  converted: < updates >,
+  duplicate: < updates >,
+  hidden: < updates >,
   _id: new ObjectId("637c128f2359c98abccc6bc8"),
   __v: 0
 }
 ```
-### /removeQuote?id=< id >
-Request: <span style="color:green">**DELETE**</span>
-
+Request: <span style="font-size:1.5rem;color:green">**DELETE**</span>
+```
+/leads?id=< id >
+```
 Response: 
 ```
  false

@@ -14,22 +14,14 @@ export const Leads = {
     getLead: async (id = false) => {
         let leads
         !id
-            ? (leads = await LeadEntry.find({"duplicate":{"$ne":true}}))
+            ? (leads = await LeadEntry.find({hidden:false}))
             : (leads = await LeadEntry.findById(id))
         return leads
     },
-    updateLead: async (id, updates) => {
-        const lead = await LeadEntry.findById(id)
-        updates.forEach((update) => {
-            lead[update.field] = update.content
-        })
-        try {
-            await lead.save()
-            return lead
-        } catch (err) {
-            console.log(err)
-            throw new Error(err)
-        }
+    updateLead: async (lead) => {
+        const updatedLead = await LeadEntry.findByIdAndUpdate(lead._id,lead,{new:true})
+        await updatedLead.save()
+        return updatedLead
     },
     newLead: async (
         firstname,
@@ -51,35 +43,30 @@ export const Leads = {
             make: make,
             model: model,
             issue: issue,
-            price: 0
+            price: 0,
+            hidden:false
         })
         // get quote price...
         const prices = await Pricelist.findOne({ model: lead.model })
-        lead.price = prices.repairs[camelize(lead.issue)] || 0
+        prices ? lead.price = prices.repairs[camelize(lead.issue)] || 0 : 0
+        //check for duplicate lead
+        let duplicates = await LeadEntry.find({email:email,model:model,issue:issue,price:lead.price})
+        duplicates.length>0 ? lead.hidden=true:lead.hidden=false
         // save to database & send email...
-        try {
-            const message = new Email(
-                email,
-                `Your ${C.brand} Repair Quote is Here!`,
-                lead.price > 0 ? 'quote' : 'noQuote',
-                lead
-            )
-            const emailResult = await message.send()
-            lead.emailed = emailResult
-            await lead.save()
-            return lead
-        } catch (e) {
-            throw e
-        }
+        const message = new Email(
+            email,
+            `Your ${C.brand} Repair Quote is Here!`,
+            lead.price > 0 ? 'quote' : 'noQuote',
+            lead
+        )
+        const emailResult = await message.send()
+        lead.emailed = emailResult
+        await lead.save()
+        return lead
     },
     removeLead: async (id) => {
-        try {
-            await LeadEntry.findByIdAndRemove(id)
-            return false
-        } catch (err) {
-            console.log(err)
-            throw new Error(err)
-        }
+        await LeadEntry.findByIdAndRemove(id)
+        return false
     },
 }
 export const Devices = {
@@ -94,47 +81,31 @@ export const Devices = {
                     device.repairs[i] = 0.0
                 }
             })
-        } else {
+        } else if(devices.repairs) {
             for (let i = 0; i < devices.repairs.length; i++) {
                 devices.repairs[i] = 0.0
             }
         }
+        else return false
         return devices
     },
     newDevice: async (type, make, model) => {
+        if(!type||!make||!model) throw 'Missing device information!'
         const device = new Pricelist({
             type: type,
             make: make,
             model: model,
         })
-        try {
-            await device.save()
-            return device
-        } catch (err) {
-            console.log(err)
-            throw new Error(err)
-        }
+        await device.save()
+        return device
     },
-    updateDevice: async (id, updates) => {
-        const device = await Pricelist.findById(id)
-        for(let i=0; i<updates.length; i+=2){
-            device.repairs[updates[i]] = updates[i+1]
-        }
-        try {
-            await device.save()
-            return device
-        } catch (err) {
-            console.log(err)
-            throw new Error(err)
-        }
+    updateDevice: async (lead) => {
+        const device = await Pricelist.findByIdAndUpdate(lead._id,lead,{new:true})
+        await device.save()
+        return device
     },
     removeDevice: async (id) => {
-        try {
-            await Pricelist.findByIdAndRemove(id)
-            return false
-        } catch (err) {
-            console.log(err)
-            throw new Error(err)
-        }
+        await Pricelist.findByIdAndRemove(id)
+        return false
     },
 }
