@@ -32,12 +32,11 @@ const createDevice = async()=>{
     return await Devices.updateDevice(device)
 }
 const createLead = async()=>{
-    const lead = await Leads.newLead(
+    return await Leads.newLead(
         'Test','Test','71st',
         'test@email.com','0000000000',
         'Apple','iPhone X','battery'
     )
-    return lead
 }
 const cleanup = async(lead,device)=>{
     await Leads.removeLead(lead._id)
@@ -55,8 +54,8 @@ async function run(){
         console.log(chalk.cyan('Generating lead...'))
         const lead = await createLead()
         const result = [
-            await Devices.getDevice(),
-            await Leads.getLead()
+            await Leads.getLead(false,'pageless'),
+            await Devices.getDevice(false,'pageless'),
         ]
         result.forEach(res=>res.docs[0] = JSON.stringify(res.docs[0]))
         console.log(chalk.cyan('Cleaning up...'))

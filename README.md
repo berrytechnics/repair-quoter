@@ -71,7 +71,7 @@ Request: <span style="font-size:1.5rem;color:green">**GET**</span>
 ```
 /devices?id=< id > 
 or 
-/devices?page=< page number >
+/devices?page=< page number or pageless >
 ```
 Response: 
 ```
@@ -87,6 +87,35 @@ Response:
     hasNextPage: < true/false >,
     prevPage: < # >,
     nextPage: < # >             
+  }
+  or if ?page=pageless
+  {
+    docs:[
+      {
+        "_id":"63827fadb4ea5cdf313f8cf7",
+          "type":"phone",
+          "make":"Apple",
+          "model":"iPhone X",
+          "fusedDisplay":false,
+          "__v":0,
+        "repairs":{
+          "screenGlass":0,
+          "lcd":0,
+          "battery":59.99,
+          "chargePort":0,
+          "frontCamera":0,
+          "rearCamera":0,
+          "earSpeaker":0,
+          "loudSpeaker":0,
+          "rearGlass":0,
+          "liquidDamage":0
+        },
+        {< another device >},
+        {< another device >},
+        {< another device >},
+        ...
+      }
+    ]
   }
 ```
 Request: <span style="font-size:1.5rem;color:green">**POST**</span>
@@ -170,7 +199,7 @@ Request: <span style="font-size:1.5rem;color:green">**GET**</span>
 ```
 /leads?id=< id >
 or
-/leads?page=< page number >
+/leads?page=< page number or pageless >
 ```
 Response: 
 ```
@@ -186,6 +215,38 @@ Response:
   hasNextPage: < true/false >,
   prevPage: < # >,
   nextPage: < # >             
+  }
+```
+  *or if ?page=pageless*
+```
+  {
+    docs:[
+      {
+        "_id":"63827fadb4ea5cdf313f8cfb",
+        "firstName":"Test",
+        "lastName":"Test",
+        "location":"71st",
+        "email":"test@email.com",
+        "phone":"0000000000",
+        "make":"Apple",
+        "model":"iPhone X",
+        "issue":"battery",
+        "price":59.99,
+        "convertedUser":"",
+        "respondedUser":"","date":"2022-11-26T21:05:48.231Z",
+        "modified":"2022-11-26T21:05:48.231Z",
+        "emailed":true,
+        "responded":false,
+        "converted":false,
+        "hidden":false,
+        "__v":0
+        },
+        {< another lead >},
+        {< another lead >},
+        {< another lead >},
+        {< another lead >},
+        ...
+    ]
   }
 ```
 Request: <span style="font-size:1.5rem;color:green">**POST**</span>
