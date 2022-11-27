@@ -10,9 +10,8 @@
         "format:write": "prettier --write ./api/",
         "lint:check": "eslint ./api/",
         "lint:fix": "eslint --fix ./api/",
+        "build": "prettier --write ./api/ && eslint --fix ./api/",
         "dev": "nodemon api/main",
-        "build": "prettier --write ./api/ && eslint --fix ./api/ && node api/main.js",
-        "test": "node test",
         "start": "node api/main"
     },
     "author": "Kyle Berry",

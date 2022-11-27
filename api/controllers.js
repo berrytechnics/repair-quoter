@@ -48,7 +48,7 @@ export const Leads = {
         make,
         model,
         issue,
-        sendMsg=true
+        sendMsg = true
     ) => {
         //create lead from model...
         const lead = new LeadEntry({
@@ -131,7 +131,7 @@ export const Devices = {
             pageNum !== 'pageless' &&
             page.totalDocs === 1 &&
             page.docs[0].repairs
-            ) {
+        ) {
             // hide prices for single repair - do not like this method
             for (let i = 0; i < page.docs[0].repairs.length; i++) {
                 page.docs[0].repairs[i] = 0.0
