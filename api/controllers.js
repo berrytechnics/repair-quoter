@@ -47,7 +47,8 @@ export const Leads = {
         phone,
         make,
         model,
-        issue
+        issue,
+        sendMsg=true
     ) => {
         //create lead from model...
         const lead = new LeadEntry({
@@ -78,7 +79,8 @@ export const Leads = {
             email,
             `Your ${C.brand} Repair Quote is Here!`,
             lead.price > 0 ? 'quote' : 'noQuote',
-            lead
+            lead,
+            sendMsg
         )
         const emailResult = await message.send()
         lead.emailed = emailResult ? true : false

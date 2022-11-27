@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import mailerText from 'nodemailer-html-to-text'
+import { convert } from 'html-to-text'
 import ejs from 'ejs'
 import * as EmailValidator from 'email-validator'
 import path from 'path'
@@ -8,11 +8,12 @@ import { lookup } from '../helpers.js'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 class Email {
-    constructor(to, subject, template, data) {
+    constructor(to, subject, template, data, sendMsg=true) {
         this.to = to
         this.subject = subject
         this.template = `${__dirname}/${template}.ejs`
-        this.data = data
+        this.data = data,
+        this.sendMsg = sendMsg
     }
     async send() {
         let lead = {
@@ -33,13 +34,17 @@ class Email {
                 pass: process.env.EMAIL_PASS,
             },
         })
-        transporter.use('compile', mailerText.htmlToText())
-        const result = await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: this.to,
-            subject: this.subject,
-            html: await ejs.renderFile(this.template, lead),
-        })
+        let result
+        if(!this.sendMsg) {result = {}}
+        else {
+            result = await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: this.to,
+                subject: this.subject,
+                html: await ejs.renderFile(this.template, lead),
+                text: convert(await ejs.renderFile(this.template, lead))
+            })
+        }
         result.accepted && this.data.price > 0 ? (emailSent = true) : null
         return emailSent
     }

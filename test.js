@@ -3,6 +3,9 @@ import {Leads,Devices} from './api/controllers.js'
 import 'dotenv/config'
 import chalk from 'chalk'
 import mongoose from 'mongoose'
+
+const disableEmail = false;
+
 const wipeDB = async()=>{
     await Pricelist.deleteMany({wanttokeep:false})
     await LeadEntry.deleteMany({wanttokeep:false})
@@ -18,11 +21,13 @@ const createLeads = async()=>{
         'Test','Test','71st',
         'kyle@thephonedoctors.com','0000000000',
         'Apple','iPhone X','battery'
+        ,!disableEmail
         ),
         await Leads.newLead(
         'Test','Test','71st',
         'kyle@thephonedoctors.com','0000000000',
         'Apple','iPhone X','other'
+        ,!disableEmail
         ),
     ]
 }
