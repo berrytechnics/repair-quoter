@@ -4,24 +4,9 @@ import ejs from 'ejs'
 import * as EmailValidator from 'email-validator'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { camelize } from '../helpers.js'
+import { lookup } from '../helpers.js'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const lookup = (i) => {
-    const table = [
-        'Screen Glass',
-        'LCD',
-        'Battery',
-        'Charge Port',
-        'Front Camera',
-        'Rear Camera',
-        'Ear Speaker',
-        'Loud Speaker',
-        'Rear Glass',
-        'Liquid Damage',
-    ]
-    return table.filter((x) => camelize(x) === i)[0]
-}
 class Email {
     constructor(to, subject, template, data) {
         this.to = to

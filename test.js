@@ -3,28 +3,9 @@ import {Leads,Devices} from './api/controllers.js'
 import 'dotenv/config'
 import chalk from 'chalk'
 import mongoose from 'mongoose'
-
 const wipeDB = async()=>{
     await Pricelist.deleteMany({wanttokeep:false})
     await LeadEntry.deleteMany({wanttokeep:false})
-}
-const testPaginate = async()=>{
-    await Devices.newDevice('phone','Apple','iPhone X')
-    await Devices.newDevice('phone','Apple','iPhone 11')
-    await Leads.newLead(
-        'Test','Test','71st',
-        'test@email.com','0000000000',
-        'Apple','iPhone X','battery'
-    )
-    await Leads.newLead(
-        'Test','Test','71st',
-        'test@email.com','0000000000',
-        'Apple','iPhone 11','battery'
-    )
-    return [
-        await Devices.getDevice(),
-        await Leads.getLead()
-    ]
 }
 const createDevice = async()=>{
     const device = await Devices.newDevice('phone','Apple','iPhone X')
@@ -50,9 +31,6 @@ const cleanup = async(lead,device)=>{
     await Devices.removeDevice(device._id)
     return false
 }
-
-
-
 async function run(){
     try{
         mongoose.connect(process.env.MONGO_URI)

@@ -65,7 +65,7 @@ export const Leads = {
         // get quote price...
         const prices = await Pricelist.findOne({ model: lead.model })
         prices ? (lead.price = prices.repairs[camelize(lead.issue)] || 0) : 0
-        //check for duplicate lead
+        //check for duplicate lead...
         let duplicates = await LeadEntry.find({
             email: email,
             model: model,
@@ -73,7 +73,7 @@ export const Leads = {
             price: lead.price,
         })
         duplicates.length > 0 ? (lead.hidden = true) : (lead.hidden = false)
-        // save to database & send email...
+        // send email and save lead...
         const message = new Email(
             email,
             `Your ${C.brand} Repair Quote is Here!`,
@@ -93,16 +93,17 @@ export const Leads = {
 export const Devices = {
     getDevice: async (id = false, pageNum = 1) => {
         let page
-        // find given device
         if (!id) {
+            // find all devices and paginate or don't
             page = await Pricelist.paginate({
                 pagination: pageNum === 'pageless' ? false : true,
                 page: pageNum !== 'pageless' ? pageNum : 1,
                 limit: pageOpts.limit,
                 lean: pageOpts.lean,
             })
-            // find all devices and paginate
-        } else
+        }
+        // find given device
+        else
             page = {
                 docs: [await Pricelist.findById(id)],
                 totalDocs: 1,
@@ -116,25 +117,25 @@ export const Devices = {
                 prevPage: null,
                 nextPage: null,
             }
-        // find all pages without pagination
         if (pageNum !== 'pageless' && page.totalDocs > 1) {
-            // hide prices for repairs - do not like this method
+            // find all pages without pagination
             page.docs.forEach((device) => {
+                // hide prices for repairs - do not like this method
                 for (let i = 0; i < device.repairs.length; i++) {
                     device.repairs[i] = 0.0
                 }
             })
-            // hide prices for single repair - do not like this method
         } else if (
             pageNum !== 'pageless' &&
             page.totalDocs === 1 &&
             page.docs[0].repairs
-        ) {
+            ) {
+            // hide prices for single repair - do not like this method
             for (let i = 0; i < page.docs[0].repairs.length; i++) {
                 page.docs[0].repairs[i] = 0.0
             }
-            // return empty DB
         } else if (pageNum !== 'pageless')
+            // return empty DB
             page = {
                 docs: [],
                 totalDocs: 0,

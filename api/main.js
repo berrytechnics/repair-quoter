@@ -24,3 +24,4 @@ app.listen(process.env.PORT, () => {
     })
     db.once('open', () => console.log('API Database connected...'))
 })
+export default app
