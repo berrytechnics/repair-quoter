@@ -1,15 +1,7 @@
 import C from './constants.js'
 import { Email } from './mailer/mailer.js'
 import { LeadEntry, Pricelist } from './models.js'
-const camelize = (str) => {
-    let string = str
-        .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
-            return index === 0 ? word.toLowerCase() : word.toUpperCase()
-        })
-        .replace(/\s+/g, '')
-    string === 'lCD' ? (string = 'lcd') : null
-    return string.charAt(0).toLowerCase() + string.slice(1)
-}
+import { camelize } from './helpers.js'
 const pageOpts = {
     limit: 25,
     lean: true,
@@ -89,7 +81,7 @@ export const Leads = {
             lead
         )
         const emailResult = await message.send()
-        lead.emailed = emailResult
+        lead.emailed = emailResult ? true : false
         await lead.save()
         return lead
     },
@@ -101,6 +93,7 @@ export const Leads = {
 export const Devices = {
     getDevice: async (id = false, pageNum = 1) => {
         let page
+        // find given device
         if (!id) {
             page = await Pricelist.paginate({
                 pagination: pageNum === 'pageless' ? false : true,
@@ -108,6 +101,7 @@ export const Devices = {
                 limit: pageOpts.limit,
                 lean: pageOpts.lean,
             })
+            // find all devices and paginate
         } else
             page = {
                 docs: [await Pricelist.findById(id)],
@@ -122,12 +116,15 @@ export const Devices = {
                 prevPage: null,
                 nextPage: null,
             }
+        // find all pages without pagination
         if (pageNum !== 'pageless' && page.totalDocs > 1) {
+            // hide prices for repairs - do not like this method
             page.docs.forEach((device) => {
                 for (let i = 0; i < device.repairs.length; i++) {
                     device.repairs[i] = 0.0
                 }
             })
+            // hide prices for single repair - do not like this method
         } else if (
             pageNum !== 'pageless' &&
             page.totalDocs === 1 &&
@@ -136,6 +133,7 @@ export const Devices = {
             for (let i = 0; i < page.docs[0].repairs.length; i++) {
                 page.docs[0].repairs[i] = 0.0
             }
+            // return empty DB
         } else if (pageNum !== 'pageless')
             page = {
                 docs: [],

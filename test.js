@@ -31,12 +31,19 @@ const createDevice = async()=>{
     device.repairs.battery = 59.99
     return await Devices.updateDevice(device)
 }
-const createLead = async()=>{
-    return await Leads.newLead(
+const createLeads = async()=>{
+    return [
+        await Leads.newLead(
         'Test','Test','71st',
-        'test@email.com','0000000000',
+        'kyle@thephonedoctors.com','0000000000',
         'Apple','iPhone X','battery'
-    )
+        ),
+        await Leads.newLead(
+        'Test','Test','71st',
+        'kyle@thephonedoctors.com','0000000000',
+        'Apple','iPhone X','other'
+        ),
+    ]
 }
 const cleanup = async(lead,device)=>{
     await Leads.removeLead(lead._id)
@@ -54,7 +61,7 @@ async function run(){
         console.log(chalk.cyan('Generating device...'))
         const device = await createDevice()
         console.log(chalk.cyan('Generating lead...'))
-        const lead = await createLead()
+        const lead = await createLeads()
         const result = [
             await Leads.getLead(false,'pageless'),
             await Devices.getDevice(false,'pageless')
