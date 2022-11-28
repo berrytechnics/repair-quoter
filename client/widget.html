@@ -164,7 +164,7 @@
         'Liquid Damage',
         'Other'
         ]
-        var handleError = err => alert(`ERROR: ${err.messageText}`)
+        var handleError = err => alert(`ERROR: ${err.responseText}`)
         var formControl = {
             init:()=>{
                 if(devices) $('.loader-container').fadeOut()
@@ -220,6 +220,7 @@
                 }
             },
             submit:async()=>{
+                    $('.loader-container').fadeIn()
                     lead.firstName = $('.firstName').val()
                     lead.lastName = $('.lastName').val()
                     lead.phone = $('.phone').val()
