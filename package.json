@@ -6,13 +6,15 @@
     "type": "module",
     "main": "api/main.js",
     "scripts": {
+        "start":"node api/main.js",
         "format:check": "prettier --check ./api/",
         "format:write": "prettier --write ./api/",
         "lint:check": "eslint ./api/",
         "lint:fix": "eslint --fix ./api/",
         "build": "prettier --write ./api/ && eslint --fix ./api/",
         "dev": "nodemon api/main",
-        "start": "node api/main"
+        "serve:client": "serve ./client/",
+        "serve:api":"npm start"
     },
     "author": "Kyle Berry",
     "repository": {
@@ -37,6 +39,7 @@
         "eslint": "^8.28.0",
         "eslint-config-prettier": "^8.5.0",
         "nodemon": "^2.0.20",
-        "prettier": "^2.7.1"
+        "prettier": "^2.7.1",
+        "serve": "^14.1.2"
     }
 }

@@ -1,6 +1,6 @@
 # repair-quoter
 
-repair-quoter is a planned replacement of the Phone Doctors 2021 repair quote implementation.
+repair-quoter a complete cellphone and computer repair industry leads generating widget. It is capable of collecting, storing, replying to, and tracking website leads via quoting for device repairs.
 
 This project will include a backend api to connect to a database and SMTP server, as well as a frontend widget to embed in an existing website or app.
 
@@ -35,7 +35,7 @@ repair-quoter uses the following [environment variables](https://devcenter.herok
 > Your Environment variables _could_ look something like this:
 
 ```
-PORT = 3000 // this is the port for the development server
+PORT = 4200 // this is the port for the development server
 TESTEMAIL = "test@test.test" /* this is the email address test emails are sent to */
 MONGO_URI = "mongodb+srv://<user>:<password>@cluster0.exampleURI.mongodb.net/?retryWrites=true&w=majority"
 EMAIL_HOST = "smtp.emailhost.com"
@@ -46,16 +46,14 @@ EMAIL_PASS = "userPassword"
 
 ## Usage
 
-Test
-
-```
-npm run test
-```
-
 Start
 ```
 npm start
 ```
+
+## Client
+`client/widget.html` contains a simple working frontend for the api. This file MUST be served via an http server. Otherwise, you will experience a [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors) error.
+repair-quoter uses [serve](https://www.npmjs.com/package/serve) to run a simple client serving the quote form.
 
 ## API Endpoints
 
