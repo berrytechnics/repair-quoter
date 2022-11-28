@@ -164,7 +164,7 @@
         'Liquid Damage',
         'Other'
         ]
-        var handleError = err => alert(`ERROR: ${err.responseText}`)
+        var handleError = err => alert(`ERROR: ${err.responseText||'Unable to load widget... Please try later.'}`)
         var formControl = {
             init:()=>{
                 if(devices) $('.loader-container').fadeOut()
