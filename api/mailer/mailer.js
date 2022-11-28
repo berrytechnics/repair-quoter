@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer'
 import { convert } from 'html-to-text'
 import ejs from 'ejs'
-import * as EmailValidator from 'email-validator'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { lookup } from '../helpers.js'
@@ -23,8 +22,6 @@ class Email {
             price: this.data.price,
         }
         let emailSent = false
-        const validation = EmailValidator.validate(this.to)
-        if (!validation) return 'bad email'
         const transporter = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,

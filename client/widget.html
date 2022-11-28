@@ -18,7 +18,7 @@
             color:red;
         }
         progress{
-            border:0;
+            /* border:0; */
             width:100%;
             height:3rem;
         }
@@ -30,7 +30,7 @@
             border-radius: .5rem;
             border:0px;
         }
-        button {
+        button,input[type='submit'] {
             margin-bottom:.5rem;
             width:100%;
             background-color: #FCFCFD;
@@ -72,6 +72,7 @@
 <!-- HTML !-->
 <body>
     <div class="widget">
+    <form>
         <h1>Phone Doctor's Repair Quote</h1>
         <progress value="0" max="100">20 %</progress>
         <div class="type"><h2>Select Device Type</h2></div>
@@ -88,8 +89,9 @@
             <input type="tel" required class="phone" name="phone">
             <label for="email">Email <span class="text-red">*</span></label>
             <input type="email" required class="email" name="email">
-            <button onclick="formControl.submit()">Get Quote</button>
+            <input type="submit" value="Get Quote" />
         </div>
+    </form>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script>
@@ -113,7 +115,7 @@
                     typeof(types.find(x=>x===device.type))==='undefined' ? types.push(device.type) : null
                 })
                 types.forEach(type=>{
-                    $('.type').append(`<button onclick="formControl.select.type('${type}')">${type}</button>`)
+                    $('.type').append(`<button onclick="formControl.select.type('${type}')">${type.toUpperCase()}</button>`)
                 })
             },
             select:{
@@ -165,24 +167,12 @@
                     lead.lastName = $('.lastName').val()
                     lead.phone = $('.phone').val()
                     lead.email = $('.email').val()
-                    lead.location="TEST"
-                    var validate = ()=>{
-                        var check = 0;
-                        lead.firstName.trim()===""?check++:null
-                        lead.lastName.trim()===""?check++:null
-                        lead.location.trim()===""?check++:null
-                        lead.phone.trim()===""?check++:null
-                        lead.email.trim()===""?check++:null
-                        lead.type.trim()===""?check++:null
-                        lead.make.trim()===""?check++:null
-                        lead.model.trim()===""?check++:null
-                        if (check===0) return true
-                        return false
-                    } 
-                    console.log(validate())                   
-                    validate() ? $.post('http://localhost:4200/leads',lead,(data,status)=>{
-                        console.log(data)
-                    }) : alert('Missing Information!')
+                    lead.location="TEST"               
+                    $.post('http://localhost:4200/leads',lead,(data,status)=>{
+                        console.log(status+":",data)
+
+                        alert(`Thank you for requesting a quote! you will receive an email at ${lead.email}. Don't forget to check your spam folder if you don't see it!`)
+                    })
             },
             reset:()=>{
                 lead = {}
@@ -193,6 +183,10 @@
         $(document).ready(async()=>{
             devices = await $.get('http://localhost:4200/devices')
             formControl.init()
+            $('form').submit(e=>{
+                e.preventDefault();
+                formControl.submit()
+            })
         })
     </script>
 </body>
