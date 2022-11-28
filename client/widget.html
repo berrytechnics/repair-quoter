@@ -12,7 +12,7 @@
             display:none
         }
         *{
-            font-family: "JetBrains Mono",monospace;
+            font-family: "Roboto",Arial;
         }
         .text-red{
             color:red;
@@ -22,7 +22,7 @@
             width:100%;
             height:3rem;
         }
-        input{
+        input[type='text'],input[type='email'],input[type='tel']{
             display:block;
             min-width:100%;
             margin-bottom:.5rem;
@@ -55,14 +55,14 @@
             will-change: box-shadow,transform;
             font-size: 18px;
         }
-        button:focus {
+        button:focus,input[type='submit']:focus {
             box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
         }
-        button:hover {
+        button:hover,input[type='submit']:hover {
             box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
             transform: translateY(-2px);
         }
-        button:active {
+        button:active,input[type='submit']:active {
             box-shadow: #D6D6E7 0 3px 7px inset;
             transform: translateY(2px);
         }
@@ -73,7 +73,6 @@
 <body>
     <div class="widget">
     <form>
-        <h1>Phone Doctor's Repair Quote</h1>
         <progress value="0" max="100">20 %</progress>
         <div class="type"><h2>Select Device Type</h2></div>
         <div class="make"><h2>Select Device Manufacturer</h2></div>
@@ -88,7 +87,7 @@
             <label for="phone">Phone <span class="text-red">*</span></label>
             <input type="tel" required class="phone" name="phone">
             <label for="email">Email <span class="text-red">*</span></label>
-            <input type="email" required class="email" name="email">
+            <input type="email" required class="email" name="email"><br>
             <input type="submit" value="Get Quote" />
         </div>
     </form>
