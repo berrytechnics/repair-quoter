@@ -14,7 +14,7 @@ router
                 )
             )
         } catch (err) {
-            res.send(err)
+            res.status(400).send(err)
         }
     })
     .post('/devices', async (req, res) => {
@@ -26,7 +26,7 @@ router
             )
             res.send(device)
         } catch (err) {
-            res.send(err)
+            res.status(400).send(err)
         }
     })
     .put('/devices', async (req, res) => {
@@ -35,7 +35,7 @@ router
             let updatedDevice = await Devices.updateDevice(req.body)
             res.send(updatedDevice)
         } catch (err) {
-            res.send(err)
+            res.status(400).send(err)
         }
     })
     .delete('/devices', async (req, res) => {
@@ -43,7 +43,7 @@ router
             await Devices.removeDevice(req.query.id)
             res.send(false)
         } catch (err) {
-            res.send(err)
+            res.status(400).send(err)
         }
     })
 // leads
@@ -54,7 +54,7 @@ router
                 await Leads.getLead(req.query.id || false, req.query.page || 1)
             )
         } catch (err) {
-            res.send(err)
+            res.status(400).send(err)
         }
     })
     .post('/leads', async (req, res) => {
@@ -71,7 +71,7 @@ router
             )
             res.send(lead)
         } catch (err) {
-            res.send(err)
+            res.status(400).send(err)
         }
     })
     .put('/leads', async (req, res) => {
@@ -79,7 +79,7 @@ router
             const lead = await Leads.updateLead(req.body)
             res.send(lead)
         } catch (err) {
-            res.send(err)
+            res.status(400).send(err)
         }
     })
     .delete('/leads', async (req, res) => {
@@ -87,7 +87,7 @@ router
             await Leads.removeLead(req.query.id)
             res.send(false)
         } catch (err) {
-            res.send(err)
+            res.status(400).send(err)
         }
     })
 export default router

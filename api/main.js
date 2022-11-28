@@ -15,7 +15,7 @@ app.use((err, req, res, next) => {
 })
 app.all('*', (req, res) => res.sendStatus(400))
 app.listen(process.env.PORT, () => {
-    console.log('API Server Listening...')
+    console.log(`API Server Listening on ${process.env.PORT}...`)
     mongoose.connect(process.env.MONGO_URI)
     const db = mongoose.connection
     db.on('error', () => {

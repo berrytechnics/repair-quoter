@@ -62,6 +62,8 @@ repair-quoter uses [serve](https://www.npmjs.com/package/serve) to run a simple 
 
 ## API Endpoints
 
+*Any errors will be returned as `{error:< err >}`*
+
 ### **/**
 Request: <span style="font-size:1.5rem;color:green">**ANY**</span>
 

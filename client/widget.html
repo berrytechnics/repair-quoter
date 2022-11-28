@@ -5,8 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>repair-quoter</title>
     <style>
+
         body{
             background-color: #c6c6c6;
+        }
+        .loading{
+            z-index:5;
+            display:block;
+            height:100%;
+            width:100%;
         }
         .make,.model,.issue,.contact{
             display:none
@@ -66,11 +73,60 @@
             box-shadow: #D6D6E7 0 3px 7px inset;
             transform: translateY(2px);
         }
+        /* CSS LOADER*/
+        .loader-container{
+            background-color: #c6c6c6;
+            position:absolute;
+            display:block;
+            z-index:5;
+            width:100%;
+            height:100%
+        }
+        .loader,
+        .loader:after {
+        border-radius: 50%;
+        width: 10em;
+        height: 10em;
+        }
+        .loader {
+        margin: 60px auto;
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+        border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+        border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+        border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+        border-left: 1.1em solid #ffffff;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation: load8 1.1s infinite linear;
+        animation: load8 1.1s infinite linear;
+        }
+        @-webkit-keyframes load8 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+        }
+        @keyframes load8 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+        }
     </style>
 </head>
-
-<!-- HTML !-->
 <body>
+    <div class="loader-container"><div class="loader">Loading...</div></div>
     <div class="widget">
     <form>
         <progress value="0" max="100">20 %</progress>
@@ -108,8 +164,10 @@
         'Liquid Damage',
         'Other'
         ]
+        var handleError = err => alert(`ERROR: ${err.messageText}`)
         var formControl = {
             init:()=>{
+                if(devices) $('.loader-container').fadeOut()
                 devices.docs.forEach(device=>{
                     typeof(types.find(x=>x===device.type))==='undefined' ? types.push(device.type) : null
                 })
@@ -161,17 +219,16 @@
                     $('.contact').slideDown()
                 }
             },
-            submit:()=>{
+            submit:async()=>{
                     lead.firstName = $('.firstName').val()
                     lead.lastName = $('.lastName').val()
                     lead.phone = $('.phone').val()
                     lead.email = $('.email').val()
                     lead.location="TEST"               
-                    $.post('http://localhost:4200/leads',lead,(data,status)=>{
-                        console.log(status+":",data)
+                    var response = await $.post('http://localhost:4200/leads',lead)
+                    alert(`Your repair request was submitted! we will email your estimate to ${lead.email}. If you don't see it, check your spam folder!`)
+                    window.location.reload()
 
-                        alert(`Thank you for requesting a quote! you will receive an email at ${lead.email}. Don't forget to check your spam folder if you don't see it!`)
-                    })
             },
             reset:()=>{
                 lead = {}
@@ -180,11 +237,19 @@
             },
         }
         $(document).ready(async()=>{
-            devices = await $.get('http://localhost:4200/devices')
-            formControl.init()
-            $('form').submit(e=>{
+            try{
+                devices = await $.get('http://localhost:4200/devices')
+                formControl.init()
+            } catch(err) {
+                handleError(err)
+            }
+            $('form').submit(async(e)=>{
                 e.preventDefault();
-                formControl.submit()
+                try {
+                    await formControl.submit()
+                } catch(err) {
+                    handleError(err)
+                }
             })
         })
     </script>
