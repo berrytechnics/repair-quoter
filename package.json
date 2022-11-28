@@ -1,12 +1,12 @@
 {
     "name": "repair-quoter",
-    "version": "3.3.1",
+    "version": "3.4.0",
     "description": "repair-quoter is a planned replacement of the Phone Doctors 2021 repair quote implementation. ",
     "private": false,
     "type": "module",
     "main": "api/main.js",
     "scripts": {
-        "start":"node api/main.js",
+        "start": "node api/main.js",
         "format:check": "prettier --check ./api/",
         "format:write": "prettier --write ./api/",
         "lint:check": "eslint ./api/",
@@ -14,7 +14,7 @@
         "build": "prettier --write ./api/ && eslint --fix ./api/",
         "dev": "nodemon api/main",
         "serve:client": "serve ./client/",
-        "serve:api":"npm start"
+        "serve:api": "npm start"
     },
     "author": "Kyle Berry",
     "repository": {
