@@ -5,7 +5,7 @@ const router = express.Router()
 router.all('/', (req, res) => res.sendStatus(200))
 // devices
 router
-    .get('/devices', async (req, res, next) => {
+    .get('/devices', async (req, res) => {
         try {
             res.send(
                 await Devices.getDevice(
@@ -14,10 +14,10 @@ router
                 )
             )
         } catch (err) {
-            next(err)
+            res.send(err)
         }
     })
-    .post('/devices', async (req, res, next) => {
+    .post('/devices', async (req, res) => {
         try {
             const device = await Devices.newDevice(
                 req.body.type,
@@ -26,38 +26,38 @@ router
             )
             res.send(device)
         } catch (err) {
-            next(err)
+            res.send(err)
         }
     })
-    .put('/devices', async (req, res, next) => {
+    .put('/devices', async (req, res) => {
         console.log(req.body)
         try {
             let updatedDevice = await Devices.updateDevice(req.body)
             res.send(updatedDevice)
         } catch (err) {
-            next(err)
+            res.send(err)
         }
     })
-    .delete('/devices', async (req, res, next) => {
+    .delete('/devices', async (req, res) => {
         try {
             await Devices.removeDevice(req.query.id)
             res.send(false)
         } catch (err) {
-            next(err)
+            res.send(err)
         }
     })
 // leads
 router
-    .get('/leads', async (req, res, next) => {
+    .get('/leads', async (req, res) => {
         try {
             res.send(
                 await Leads.getLead(req.query.id || false, req.query.page || 1)
             )
         } catch (err) {
-            next(err)
+            res.send(err)
         }
     })
-    .post('/leads', async (req, res, next) => {
+    .post('/leads', async (req, res) => {
         try {
             const lead = await Leads.newLead(
                 req.body.firstName,
@@ -71,23 +71,23 @@ router
             )
             res.send(lead)
         } catch (err) {
-            next(err)
+            res.send(err)
         }
     })
-    .put('/leads', async (req, res, next) => {
+    .put('/leads', async (req, res) => {
         try {
             const lead = await Leads.updateLead(req.body)
             res.send(lead)
         } catch (err) {
-            next(err)
+            res.send(err)
         }
     })
-    .delete('/leads', async (req, res, next) => {
+    .delete('/leads', async (req, res) => {
         try {
             await Leads.removeLead(req.query.id)
             res.send(false)
         } catch (err) {
-            next(err)
+            res.send(err)
         }
     })
 export default router

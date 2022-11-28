@@ -46,9 +46,14 @@ EMAIL_PASS = "userPassword"
 
 ## Usage
 
-Start
+Start API
+ ```
+ npm run serve:api
+ ```
+
+Start Client 
 ```
-npm start
+npm run serve:client
 ```
 
 ## Client

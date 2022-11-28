@@ -110,7 +110,7 @@
         var formControl = {
             init:()=>{
                 devices.docs.forEach(device=>{
-                    types.find(x=>x.type===device.type) ? null : types.push(device.type)
+                    typeof(types.find(x=>x===device.type))==='undefined' ? types.push(device.type) : null
                 })
                 types.forEach(type=>{
                     $('.type').append(`<button onclick="formControl.select.type('${type}')">${type}</button>`)
@@ -123,7 +123,7 @@
                     $('.type').slideUp()
                     let list = devices.docs.filter(x=>x.type===lead.type)
                     list.forEach(device=>{
-                        makes.find(x=>x.make===device.make) ? null : makes.push(device.make)
+                        typeof(makes.find(x=>x===device.make))==='undefined' ? makes.push(device.make) : null
                     })
                     makes.forEach(make=>{
                         $('.make').append(`<button onclick="formControl.select.make('${make}')">${make}</button>`)
@@ -166,11 +166,23 @@
                     lead.phone = $('.phone').val()
                     lead.email = $('.email').val()
                     lead.location="TEST"
-                    $.post('http://localhost:4200/leads',lead,(d,s)=>{
-                    console.log(d)
-                    $('progress').val(100)
-                    alert('You will receive an email at '+lead.email+". If you don't see it, check your spam folder!")
-                    })
+                    var validate = ()=>{
+                        var check = 0;
+                        lead.firstName.trim()===""?check++:null
+                        lead.lastName.trim()===""?check++:null
+                        lead.location.trim()===""?check++:null
+                        lead.phone.trim()===""?check++:null
+                        lead.email.trim()===""?check++:null
+                        lead.type.trim()===""?check++:null
+                        lead.make.trim()===""?check++:null
+                        lead.model.trim()===""?check++:null
+                        if (check===0) return true
+                        return false
+                    } 
+                    console.log(validate())                   
+                    validate() ? $.post('http://localhost:4200/leads',lead,(data,status)=>{
+                        console.log(data)
+                    }) : alert('Missing Information!')
             },
             reset:()=>{
                 lead = {}

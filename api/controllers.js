@@ -83,7 +83,7 @@ export const Leads = {
             sendMsg
         )
         const emailResult = await message.send()
-        lead.emailed = emailResult ? true : false
+        lead.emailed = emailResult&&emailResult!=='bad email' ? true : false
         await lead.save()
         return lead
     },

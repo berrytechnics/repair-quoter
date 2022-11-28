@@ -24,7 +24,7 @@ class Email {
         }
         let emailSent = false
         const validation = EmailValidator.validate(this.to)
-        if (!validation) throw 'Invalid email address!'
+        if (!validation) return 'bad email'
         const transporter = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,
