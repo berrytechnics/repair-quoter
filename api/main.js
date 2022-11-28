@@ -4,8 +4,15 @@ import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import cors from 'cors'
 import routes from './routes.js'
+import {UserEntry} from './models.js'
+import passport from 'passport'
+passport.use(UserEntry.createStrategy())
+passport.serializeUser(UserEntry.serializeUser())
+passport.deserializeUser(UserEntry.deserializeUser())
 const app = express()
 app.use(cors())
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/', routes)
