@@ -46,4 +46,31 @@ class Email {
         return emailSent
     }
 }
-export { Email }
+class VerifyEmail{
+    constructor(to,token){
+        this.to = to
+        this.token = token
+    }
+    async send(){
+        const transporter = nodemailer.createTransport({
+            host: process.env.EMAIL_HOST,
+            port:process.env.EMAIL_PORT,
+            auth:{
+                user:process.env.EMAIL_USER,
+                pass:process.env.EMAIL_PASS
+            }
+        })
+        await transporter.sendMail({
+            from:process.env.EMAIL_USER,
+            to:this.to,
+            subject:"Verify your account!",
+            html:`
+            <a href="${process.env.DOMAIN}/verify/${this.token}">Verify your account</a>
+            <br />
+            <p>This link will expire in 7-days</p>
+            `
+        })
+        return false
+    }
+}
+export { Email,VerifyEmail }

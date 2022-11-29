@@ -1,7 +1,7 @@
 import C from './constants.js'
 import jwt from 'jsonwebtoken'
 import bCrypt from 'bcryptjs'
-import { Email } from './mailer/mailer.js'
+import { Email,VerifyEmail } from './mailer/mailer.js'
 import { LeadEntry, Pricelist, User } from './models.js'
 import { camelize } from './helpers.js'
 const pageOpts = {
@@ -178,13 +178,24 @@ export const Devices = {
     },
 }
 export const Users = {
+    validateToken:(token)=>{
+        return jwt.verify(token,process.env.JWT_SECRET)
+    },
+    verifyEmail:async(token)=>{
+        const validToken = Users.validateToken(token)
+        const user = await User.findById(validToken.id)
+        if(!user) throw 'User not found'
+        user.verified = true;
+        await user.save()
+        return user
+    },
     auth: async (req, res, next) => {
         if (!req.headers || !req.headers.authorization)
             res.json({ error: 'Token not received' })
         let authorization = req.headers.authorization
         let decoded
         try {
-            decoded = jwt.verify(authorization, process.env.JWT_SECRET)
+            decoded = Users.validateToken(authorization)
         } catch (err) {
             res.json({ error: err })
         }
@@ -200,21 +211,22 @@ export const Users = {
     register: async (req, res) => {
         try {
             let user
-            if (!req.body.username || !req.body.password)
+            if (!req.body.username || !req.body.password){
                 throw 'Missing Parameters'
+            }
             user = await User.findOne({ username: req.body.username })
             if (user) throw 'User already exists'
             user = await User.create({
                 username: req.body.username,
                 password: bCrypt.hashSync(req.body.password, 10),
             })
-            console.log(user)
             let token = jwt.sign(
                 { id: user._id, username: user.username },
                 process.env.JWT_SECRET
             )
-            console.log(token)
-            res.json({ id: user._id, user: user.username, registered: true })
+            const email = new VerifyEmail(user.username,token)
+            await email.send()
+            res.json({ message:"Check your email for a link to verify your account",id: user._id, user: user.username, registered: true })
         } catch (err) {
             res.json({ error: err })
         }
@@ -227,6 +239,7 @@ export const Users = {
             user = await User.findOne({ username: req.body.username })
             if (!user) res.json({ error: 'User not found' })
             else {
+                if(!user.verified) res.json({error:"User not verified"})
                 if (!bCrypt.compareSync(req.body.password, user.password))
                     res.json({ error: 'Wrong Password' })
                 else {

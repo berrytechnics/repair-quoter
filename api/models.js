@@ -139,6 +139,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    verified:{
+        type:Boolean,
+        default:false
+    }
 })
 userSchema.plugin(mongoosePaginate)
 export const User = mongoose.model('User', userSchema)
