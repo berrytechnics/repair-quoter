@@ -1,6 +1,6 @@
 import C from './constants.js'
 import { Email } from './mailer/mailer.js'
-import { LeadEntry, Pricelist, UserEntry} from './models.js'
+import { LeadEntry, Pricelist } from './models.js'
 import { camelize } from './helpers.js'
 const pageOpts = {
     limit: 25,
@@ -175,4 +175,3 @@ export const Devices = {
         return false
     },
 }
-export const User = {}

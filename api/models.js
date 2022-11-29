@@ -129,8 +129,3 @@ const pricelistSchema = new mongoose.Schema({
 pricelistSchema.plugin(mongoosePaginate)
 const priceModel = mongoose.model('Pricelist', pricelistSchema)
 export const Pricelist = priceModel
-
-const userSchema = new mongoose.Schema({})
-userSchema.plugin(passportLocalMongoose)
-const userModel = mongoose.model('User',userSchema)
-export const UserEntry = userModel

@@ -1,7 +1,7 @@
 import express from 'express'
 import { Leads, Devices } from './controllers.js'
 const router = express.Router()
-// test routes
+// test 
 router.all('/', (req, res) => res.sendStatus(200))
 // devices
 router
@@ -90,4 +90,7 @@ router
             res.status(400).send(err)
         }
     })
+
 export default router
+
+
