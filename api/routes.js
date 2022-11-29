@@ -96,7 +96,9 @@ router
         Users.getToken(req,res)
     })
     .post('/register',(req,res)=>{
-        Users.register(req,res)
+        req.body.password!==req.body.password2 
+        ? res.json({error:"Passwords do not match"})
+        : Users.register(req,res)
     })
     .all('/user',Users.auth,(req,res)=>{
         res.json({message:"User Authorized",user:req.user})

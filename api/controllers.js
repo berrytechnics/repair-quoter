@@ -204,7 +204,7 @@ export const Users = {
             console.log(user)
             let token = jwt.sign({id:user._id,username:user.username},process.env.JWT_SECRET)
             console.log(token)
-            res.json({user:user.username,token:token})
+            res.json({id:user._id,user:user.username,registered:true})
         }
         catch(err){res.json({error:err})}
     },

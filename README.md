@@ -71,7 +71,7 @@ Response:
 ```
 OK
 ```
-### **/register** and **/login**
+### **/login**
 Request: <span style="font-size:1.5rem;color:green">**POST**</span>
 ```
 {
@@ -82,6 +82,19 @@ Request: <span style="font-size:1.5rem;color:green">**POST**</span>
 Response:
 ```
 {id:< user._id >,token:< JSON web token >}
+```
+### **/register**
+Request: <span style="font-size:1.5rem;color:green">**POST**</span>
+```
+{
+  username: < username >,
+  password: < password >,
+  password2: < verified password >
+}
+```
+Response:
+```
+{id:< user._id >,registered:true}
 ```
 ### **/devices**
 Request: <span style="font-size:1.5rem;color:green">**GET**</span>
