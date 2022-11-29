@@ -1,6 +1,8 @@
 import C from './constants.js'
+import jwt from 'jsonwebtoken'
+import bCrypt from 'bcryptjs'
 import { Email } from './mailer/mailer.js'
-import { LeadEntry, Pricelist } from './models.js'
+import { LeadEntry, Pricelist, User } from './models.js'
 import { camelize } from './helpers.js'
 const pageOpts = {
     limit: 25,
@@ -173,5 +175,57 @@ export const Devices = {
     removeDevice: async (id) => {
         await Pricelist.findByIdAndRemove(id)
         return false
+    },
+}
+export const Users = {
+    validateToken:(req)=>{
+        return new Promise((resolve,reject)=>{
+            if(req.headers&&req.headers.authorization){
+                let authorization = req.headers.authorization
+                let decoded
+                try{
+                    decoded = jwt.verify(authorization,process.env.JWT_SECRET) 
+                }
+                catch(err){
+                    reject('Token not valid')
+                }
+                let userId = decoded.id 
+                User
+                    .findById(userId)
+                    .then(user=>{resolve({_id:user._id,username:user.username})})
+                    .catch(e=>reject('Token Error: '+e))
+            }
+            else reject('No token found')
+        })
+    },
+    register:async(req,res)=>{
+        try{
+            let user 
+            if(!req.body.username||!req.body.password) throw 'Missing Parameters'
+            user = await User.findOne({username:req.body.username})
+            if(user) throw 'User already exists'
+            user = await User.create({username:req.body.username,password:bCrypt.hashSync(req.body.password,10)})
+            console.log(user)
+            let token = jwt.sign({id:user._id,username:user.username},process.env.JWT_SECRET)
+            console.log(token)
+            res.json({user:user.username,token:token})
+        }
+        catch(err){res.json({error:err})}
+    },
+    getToken:async(req,res)=>{
+        try{
+            let user
+            if(!req.body.username||!req.body.password) res.json({error:"Missing Parameters"})
+            user = await User.findOne({username:req.body.username})
+            if(!user) res.json({error:"User not found"})
+            else{
+                if(!bCrypt.compareSync(req.body.password,user.password)) res.json({error:"Wrong Password"})
+                else{
+                    let token = jwt.sign({id:user._id,username:user.username},process.env.JWT_SECRET)
+                    res.json({user:user.username,token:token})
+                }
+            }
+        }
+        catch(err){res.json({error:err})}
     },
 }

@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
-import passportLocalMongoose from 'passport-local-mongoose'
 
 const leadSchema = new mongoose.Schema({
     firstName: {
@@ -72,8 +71,7 @@ const leadSchema = new mongoose.Schema({
     },
 })
 leadSchema.plugin(mongoosePaginate)
-const leadModel = mongoose.model('Leads', leadSchema)
-export const LeadEntry = leadModel
+export const LeadEntry = mongoose.model('Leads', leadSchema)
 
 const pricelistSchema = new mongoose.Schema({
     type: String,
@@ -127,5 +125,20 @@ const pricelistSchema = new mongoose.Schema({
     },
 })
 pricelistSchema.plugin(mongoosePaginate)
-const priceModel = mongoose.model('Pricelist', pricelistSchema)
-export const Pricelist = priceModel
+export const Pricelist = mongoose.model('Pricelist', pricelistSchema)
+
+const userSchema = new mongoose.Schema({
+    username:{
+        type:String,
+        unique:true,
+        required:true,
+        lowercase:true,
+        trim:true
+    },
+    password:{
+        type:String,
+        required:true
+    }
+})
+userSchema.plugin(mongoosePaginate)
+export const User = mongoose.model('User',userSchema)
