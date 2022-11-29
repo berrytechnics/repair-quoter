@@ -2,7 +2,7 @@
 
 repair-quoter a complete cellphone and computer repair industry leads generating widget. It is capable of collecting, storing, replying to, and tracking website leads via quoting for device repairs.
 
-This project will include a backend api to connect to a database and SMTP server, as well as a frontend widget to embed in an existing website or app.
+This project will include a backend api to connect to a database and SMTP server, as well as a frontend widget to embed in an existing website or app, and a frontend admin dashboard with user auth for managing leads and quote prices.
 
 Project development begain in November of 2022 and is ongoing.
 
@@ -42,6 +42,7 @@ EMAIL_HOST = "smtp.emailhost.com"
 EMAIL_PORT = 587
 EMAIL_USER = "user@emailhost.com"
 EMAIL_PASS = "userPassword"
+JWT_SECRET = < secret string for JSON web tokens >
 ```
 
 ## Usage

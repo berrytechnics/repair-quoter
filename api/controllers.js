@@ -178,50 +178,67 @@ export const Devices = {
     },
 }
 export const Users = {
-    auth:async(req,res,next)=>{
-        if(!req.headers||!req.headers.authorization) res.json({error:'Token not received'})
+    auth: async (req, res, next) => {
+        if (!req.headers || !req.headers.authorization)
+            res.json({ error: 'Token not received' })
         let authorization = req.headers.authorization
         let decoded
-        try{
-            decoded = jwt.verify(authorization,process.env.JWT_SECRET)
+        try {
+            decoded = jwt.verify(authorization, process.env.JWT_SECRET)
+        } catch (err) {
+            res.json({ error: err })
         }
-        catch(err){res.json({error:err})}
         let userID = decoded.id
-        try{
+        try {
             const user = await User.findById(userID)
             req.user = user
             next()
+        } catch (err) {
+            res.json({ error: err })
         }
-        catch(err){res.json({error:err})}
     },
-    register:async(req,res)=>{
-        try{
-            let user 
-            if(!req.body.username||!req.body.password) throw 'Missing Parameters'
-            user = await User.findOne({username:req.body.username})
-            if(user) throw 'User already exists'
-            user = await User.create({username:req.body.username,password:bCrypt.hashSync(req.body.password,10)})
-            console.log(user)
-            let token = jwt.sign({id:user._id,username:user.username},process.env.JWT_SECRET)
-            console.log(token)
-            res.json({id:user._id,user:user.username,registered:true})
-        }
-        catch(err){res.json({error:err})}
-    },
-    getToken:async(req,res)=>{
-        try{
+    register: async (req, res) => {
+        try {
             let user
-            if(!req.body.username||!req.body.password) res.json({error:"Missing Parameters"})
-            user = await User.findOne({username:req.body.username})
-            if(!user) res.json({error:"User not found"})
-            else{
-                if(!bCrypt.compareSync(req.body.password,user.password)) res.json({error:"Wrong Password"})
-                else{
-                    let token = jwt.sign({id:user._id,username:user.username},process.env.JWT_SECRET)
-                    res.json({user:user.username,token:token})
+            if (!req.body.username || !req.body.password)
+                throw 'Missing Parameters'
+            user = await User.findOne({ username: req.body.username })
+            if (user) throw 'User already exists'
+            user = await User.create({
+                username: req.body.username,
+                password: bCrypt.hashSync(req.body.password, 10),
+            })
+            console.log(user)
+            let token = jwt.sign(
+                { id: user._id, username: user.username },
+                process.env.JWT_SECRET
+            )
+            console.log(token)
+            res.json({ id: user._id, user: user.username, registered: true })
+        } catch (err) {
+            res.json({ error: err })
+        }
+    },
+    getToken: async (req, res) => {
+        try {
+            let user
+            if (!req.body.username || !req.body.password)
+                res.json({ error: 'Missing Parameters' })
+            user = await User.findOne({ username: req.body.username })
+            if (!user) res.json({ error: 'User not found' })
+            else {
+                if (!bCrypt.compareSync(req.body.password, user.password))
+                    res.json({ error: 'Wrong Password' })
+                else {
+                    let token = jwt.sign(
+                        { id: user._id, username: user.username },
+                        process.env.JWT_SECRET
+                    )
+                    res.json({ user: user.username, token: token })
                 }
             }
+        } catch (err) {
+            res.json({ error: err })
         }
-        catch(err){res.json({error:err})}
     },
 }

@@ -128,17 +128,17 @@ pricelistSchema.plugin(mongoosePaginate)
 export const Pricelist = mongoose.model('Pricelist', pricelistSchema)
 
 const userSchema = new mongoose.Schema({
-    username:{
-        type:String,
-        unique:true,
-        required:true,
-        lowercase:true,
-        trim:true
+    username: {
+        type: String,
+        unique: true,
+        required: true,
+        lowercase: true,
+        trim: true,
     },
-    password:{
-        type:String,
-        required:true
-    }
+    password: {
+        type: String,
+        required: true,
+    },
 })
 userSchema.plugin(mongoosePaginate)
-export const User = mongoose.model('User',userSchema)
+export const User = mongoose.model('User', userSchema)
