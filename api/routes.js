@@ -17,7 +17,7 @@ router
             res.status(400).send(err)
         }
     })
-    .post('/devices', async (req, res) => {
+    .post('/devices',Users.auth, async (req, res) => {
         try {
             const device = await Devices.newDevice(
                 req.body.type,
@@ -29,7 +29,7 @@ router
             res.status(400).send(err)
         }
     })
-    .put('/devices', async (req, res) => {
+    .put('/devices',Users.auth, async (req, res) => {
         console.log(req.body)
         try {
             let updatedDevice = await Devices.updateDevice(req.body)
@@ -38,7 +38,7 @@ router
             res.status(400).send(err)
         }
     })
-    .delete('/devices', async (req, res) => {
+    .delete('/devices',Users.auth, async (req, res) => {
         try {
             await Devices.removeDevice(req.query.id)
             res.json(false)
@@ -48,7 +48,7 @@ router
     })
 // leads
 router
-    .get('/leads', async (req, res) => {
+    .get('/leads',Users.auth, async (req, res) => {
         try {
             res.json(
                 await Leads.getLead(req.query.id || false, req.query.page || 1)
@@ -74,7 +74,7 @@ router
             res.status(400).send(err)
         }
     })
-    .put('/leads', async (req, res) => {
+    .put('/leads',Users.auth, async (req, res) => {
         try {
             const lead = await Leads.updateLead(req.body)
             res.json(lead)
@@ -82,7 +82,7 @@ router
             res.status(400).send(err)
         }
     })
-    .delete('/leads', async (req, res) => {
+    .delete('/leads',Users.auth, async (req, res) => {
         try {
             await Leads.removeLead(req.query.id)
             res.json(false)
@@ -98,12 +98,8 @@ router
     .post('/register',(req,res)=>{
         Users.register(req,res)
     })
-    .get('/user',async(req,res)=>{
-        try{
-            const user = await Users.validateToken(req)
-            res.json(user)
-        }
-        catch(err){res.json({error:err})}
+    .all('/user',Users.auth,(req,res)=>{
+        res.json({message:"User Authorized",user:req.user})
     })
 export default router
 
