@@ -9,10 +9,10 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/', routes)
 app.use((err, req, res, next) => {
-    if(!err) next()
-    res.json({error:err})
+    if (!err) next()
+    res.json({ error: err })
 })
-app.all('*', (req, res) => res.sendStatus(400))
+app.all('*', (req, res) => res.json({ error: 'Unknown Error' }))
 app.listen(process.env.PORT, () => {
     console.log(`API Server Listening on ${process.env.PORT}...`)
 })
