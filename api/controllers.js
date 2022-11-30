@@ -179,12 +179,12 @@ export const Devices = {
     },
 }
 export const Users = {
-    validateToken: (t) => {
+    validateToken: (token) => {
         try {
-            let receivedToken = jwt.verify(t, process.env.JWT_SECRET)
-            let token
+            let receivedToken = jwt.verify(token, process.env.JWT_SECRET)
+            let resultToken
             if(receivedToken.exp<=Date.now()-(1000*60*10)){ // 10 minutes
-                token = jwt.sign(
+                resultToken = jwt.sign(
                     {
                         id:receivedToken.id,
                         username:receivedToken.username,
@@ -192,13 +192,13 @@ export const Users = {
                     }
                 )
             }
-            else token = receivedToken
-            return token
+            else resultToken = receivedToken
+            return resultToken
         } catch (e) {
             return undefined
         }
     },
-    verifyEmail: async (token) => {
+    verifyEmail: async(token) => {
         const validToken = Users.validateToken(token)
         if (!validToken) throw 'Token invalid or expired'
         const user = await User.findById(validToken.id)
@@ -223,74 +223,53 @@ export const Users = {
             res.json({ error: err })
         }
     },
-    register: async (req, res) => {
-        try {
-            let user
-            if (!req.body.username || !req.body.password) {
-                throw 'Missing Parameters'
-            }
-            user = await User.findOne({ username: req.body.username })
-            if (user) throw 'User already exists'
-            user = await User.create({
-                username: req.body.username,
-                password: bCrypt.hashSync(req.body.password, 10),
-            })
-            let token = jwt.sign(
-                {
-                 id:user._id,
-                 username:user.username,
-                 exp:jwtExpiration
-                },
-                process.env.JWT_SECRET
-            )
-            const email = new VerifyEmail(user.username,token,jwtExpiration())
-            await email.send()
-            res.json({
-                message: 'Check your email for a link to verify your account',
-                id: user._id,
-                user: user.username,
-                registered: true,
-            })
-        } catch (err) {
-            res.json({ error: err })
+    register:async(user)=>{
+        if(!user.username||!user.password) throw 'Missing Parameters'
+        let foundUser = await User.findOne({username:user.username})
+        if(foundUser) throw 'User already exists'
+        let newUser = await User.create({
+            username:user.username,
+            password:bCrypt.hashSync(req.body.password,10)
+        })
+        let token = jwt.sign(
+            {
+                id:newUser._id,
+                username:newUser.username,
+                exp:jwtExpiration()
+            },
+            process.env.JWT_SECRET
+        )
+        const email = new VerifyEmail(newUser.username,token,jwtExpiration())
+        await email.send()
+        return {
+            message: 'Check your email for a link to verify your account',
+            id: newUser._id,
+            user: newUser.username,
+            registered: true,
         }
     },
-    getToken: async (req, res) => {
-        try {
-            let user
-            if (!req.body.username || !req.body.password) {
-                throw 'Missing Parameters'
-            }
-            user = await User.findOne({ username: req.body.username })
-            if (!user) throw 'User not found'
-            else {
-                if (!user.verified) throw 'User not verified'
-                if (!bCrypt.compareSync(req.body.password, user.password)) {
-                    throw 'Incorrect Username or Password'
-                } else {
-                    let token = jwt.sign(
-                        {
-                         id:user._id,
-                         username:user.username,
-                         exp:jwtExpiration()
-                        },
-                        process.env.JWT_SECRET
-                    )
-                    res.json({ user: user.username, token: token })
-                }
-            }
-        } catch (err) {
-            res.json({ error: err })
+    getToken:async(username,password)=>{
+        if(!username||!password) throw 'Missing Credentials'
+        let user = await User.findOne({username:username})
+        if(!user) throw 'User not found'
+        if(!bCrypt.compareSync(password,user.password)) throw 'Invalid Credentials'
+        let token = jwt.sign(
+            {
+                id:user._id,
+                username:user.username,
+                exp:jwtExpiration()
+            },
+            process.env.JWT_SECRET
+        )
+        return {
+            username:user.username,
+            token:token
         }
     },
-    removeUser: async (req, res) => {
-        const validToken = Users.validateToken(req.headers.authorization)
-        try {
-            if (!validToken) throw 'Invalid Token'
-            await User.findByIdAndRemove(validToken.id)
-            res.json({ message: 'User deleted' })
-        } catch (err) {
-            res.json({ error: err })
-        }
-    },
+    removeUser:async(token)=>{
+        const validToken = Users.validateToken(token)
+        if(!validToken) throw 'Invalid Token'
+        await User.findByIdAndRemove(validToken.id)
+        return {message:"User Deleted"}
+    }
 }

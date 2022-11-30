@@ -92,13 +92,16 @@ router
     })
 // user
 router
-    .post('/login', (req, res) => {
-        Users.getToken(req, res)
+    .post('/login', async(req, res) => {
+        res.json(await Users.getToken(req.body.username,req.body.password))
     })
-    .post('/register', (req, res) => {
+    .post('/register', async(req, res) => {
         req.body.password !== req.body.password2
             ? res.json({ error: 'Passwords do not match' })
-            : Users.register(req, res)
+            : res.json(await Users.register({
+                username:req.body.username,
+                password:req.body.password
+            }))
     })
     .all('/user', Users.auth, (req, res) => {
         res.json({ message: 'User Authorized', user: req.user })
