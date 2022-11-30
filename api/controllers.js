@@ -4,6 +4,7 @@ import bCrypt from 'bcryptjs'
 import { Email, VerifyEmail } from './mailer/mailer.js'
 import { LeadEntry, Pricelist, User } from './models.js'
 import { camelize } from './helpers.js'
+const jwtExpiration = Date.now()+(1000*60*60*24) //24 hours
 const pageOpts = {
     limit: 25,
     lean: true,
@@ -179,14 +180,16 @@ export const Devices = {
 }
 export const Users = {
     validateToken: (token) => {
-        try{
+        try {
             return jwt.verify(token, process.env.JWT_SECRET)
+        } catch (e) {
+            return undefined
         }
-        catch(err){return undefined}
     },
     verifyEmail: async (token) => {
         const validToken = Users.validateToken(token)
-        if(!validToken) throw 'Token invalid or expired'
+        console.log(validToken)
+        if (!validToken) throw 'Token invalid or expired'
         const user = await User.findById(validToken.id)
         if (!user) throw 'User not found'
         user.verified = true
@@ -200,7 +203,7 @@ export const Users = {
             }
             let authorization = req.headers.authorization
             let decoded = Users.validateToken(authorization)
-            if(!decoded) throw 'Invalid Token'
+            if (!decoded) throw 'Invalid Token'
             let userID = decoded.id
             const user = await User.findById(userID)
             req.user = user
@@ -222,10 +225,14 @@ export const Users = {
                 password: bCrypt.hashSync(req.body.password, 10),
             })
             let token = jwt.sign(
-                { id: user._id, username: user.username },
+                {
+                 id:user._id,
+                 username:user.username,
+                 exp:jwtExpiration
+                },
                 process.env.JWT_SECRET
             )
-            const email = new VerifyEmail(user.username, token)
+            const email = new VerifyEmail(user.username,token,jwtExpiration)
             await email.send()
             res.json({
                 message: 'Check your email for a link to verify your account',
@@ -251,7 +258,11 @@ export const Users = {
                     throw 'Incorrect Username or Password'
                 } else {
                     let token = jwt.sign(
-                        { id: user._id, username: user.username },
+                        {
+                         id:user._id,
+                         username:user.username,
+                         exp:jwtExpiration
+                        },
                         process.env.JWT_SECRET
                     )
                     res.json({ user: user.username, token: token })
@@ -261,13 +272,14 @@ export const Users = {
             res.json({ error: err })
         }
     },
-    removeUser:async(req,res)=>{
+    removeUser: async (req, res) => {
         const validToken = Users.validateToken(req.headers.authorization)
-        try{
-            if(!validToken) throw 'Invalid Token'
+        try {
+            if (!validToken) throw 'Invalid Token'
             await User.findByIdAndRemove(validToken.id)
-            res.json({message:"User deleted"})
+            res.json({ message: 'User deleted' })
+        } catch (err) {
+            res.json({ error: err })
         }
-        catch(err){res.json({error:err})}
-    }
+    },
 }

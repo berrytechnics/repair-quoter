@@ -4,6 +4,7 @@ import ejs from 'ejs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { lookup } from '../helpers.js'
+import exp from 'constants'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 class Email {
@@ -47,9 +48,10 @@ class Email {
     }
 }
 class VerifyEmail {
-    constructor(to, token) {
+    constructor(to, token, expiration) {
         this.to = to
         this.token = token
+        this.expiration = expiration
     }
     async send() {
         const transporter = nodemailer.createTransport({
@@ -67,7 +69,7 @@ class VerifyEmail {
             html: `
             <a href="${process.env.DOMAIN}/verify/${this.token}">Verify your account</a>
             <br />
-            <p>This link will expire in 7-days</p>
+            <p>This link will expire at ${new Date(this.expiration).toLocaleString()}</p>
             `,
         })
         return false
