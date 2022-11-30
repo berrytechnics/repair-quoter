@@ -271,5 +271,5 @@ export const Users = {
         if(!validToken) throw 'Invalid Token'
         await User.findByIdAndRemove(validToken.id)
         return {message:"User Deleted"}
-    }
+    },
 }
