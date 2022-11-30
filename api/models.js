@@ -168,4 +168,4 @@ const invalidUsers = async()=>{
     console.log('Unverified users scrubbed: ',list.length)
 }
 invalidUsers()
-setInterval(()=>invalidUsers(),1000*60) // 1 hour
+setInterval(invalidUsers,1000*60*60) // 1 hour
