@@ -1,7 +1,7 @@
 {
     "name": "repair-quoter",
     "version": "5.3.2",
-    "description": "repair-quoter is a planned replacement of the Phone Doctors 2021 repair quote implementation. ",
+    "description": "repair-quoter a complete cellphone and electronics repair industry leads generating widget.",
     "private": false,
     "type": "module",
     "main": "api/main.js",

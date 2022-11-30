@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>repair-quoter</title>
     <style>
-
         body{
             background-color: #c6c6c6;
         }
         .loading{
-            z-index:5;
+            z-index:2;
             display:block;
             height:100%;
             width:100%;
@@ -75,12 +74,15 @@
         }
         /* CSS LOADER*/
         .loader-container{
+            overflow:hidden;
             background-color: #c6c6c6;
-            position:absolute;
+            position:relative;
+            top:0;
+            left:0;
             display:block;
-            z-index:5;
+            z-index:1;
             width:100%;
-            height:100%
+            height:100%;
         }
         .loader,
         .loader:after {
@@ -103,25 +105,40 @@
         -webkit-animation: load8 1.1s infinite linear;
         animation: load8 1.1s infinite linear;
         }
-        @-webkit-keyframes load8 {
-        0% {
-            -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+            @-webkit-keyframes load8 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
         }
-        100% {
-            -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
+            @keyframes load8 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
         }
-        }
-        @keyframes load8 {
-        0% {
-            -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
-        }
-        100% {
-            -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
-        }
+        /* TOAST CSS */
+        .toast {
+        display:none;
+        min-width: 250px; /* Set a default minimum width */
+        margin-left: -125px; /* Divide value of min-width by 2 */
+        background-color: #333; /* Black background color */
+        color: #fff; /* White text color */
+        text-align: center; /* Centered text */
+        border-radius: 2px; /* Rounded borders */
+        padding: 16px; /* Padding */
+        position: fixed; /* Sit on top of the screen */
+        z-index: 2; /* Add a z-index if needed */
+        left: 50%; /* Center the snackbar */
+        bottom: 30px; /* 30px from the bottom */
         }
     </style>
 </head>
@@ -148,6 +165,7 @@
         </div>
     </form>
     </div>
+    <div class="toast"></div>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script>
         var lead = {},devices = {},types = [],makes = [],models = [];
@@ -164,16 +182,24 @@
         'Liquid Damage',
         'Other'
         ]
-        var handleError = err => alert(`ERROR: ${err.responseText||'Unable to load widget... Please try later.'}`)
+        var handleError = err => {
+            $('.loader-container').show()
+            $('.toast').text(err)
+            $('.toast').slideDown()
+            setTimeout(()=>$('.toast').slideUp(),3000)
+        }
         var formControl = {
             init:()=>{
-                if(devices) $('.loader-container').fadeOut()
-                devices.docs.forEach(device=>{
-                    typeof(types.find(x=>x===device.type))==='undefined' ? types.push(device.type) : null
-                })
-                types.forEach(type=>{
-                    $('.type').append(`<button onclick="formControl.select.type('${type}')">${type.toUpperCase()}</button>`)
-                })
+                try{
+                    if(devices) $('.loader-container').hide()
+                    devices.docs.forEach(device=>{
+                        typeof(types.find(x=>x===device.type))==='undefined' ? types.push(device.type) : null
+                    })
+                    types.forEach(type=>{
+                        $('.type').append(`<button onclick="formControl.select.type('${type}')">${type.toUpperCase()}</button>`)
+                    })
+                }
+                catch(err){handleError(err)}
             },
             select:{
                 type:(type)=>{
@@ -239,7 +265,9 @@
         }
         $(document).ready(async()=>{
             try{
-                devices = await $.get('http://localhost:4200/devices')
+                let data = await $.get('http://localhost:4200/devices')
+                if(data.docs.length<1) throw 'No Devices Found'
+                devices = data
                 formControl.init()
             } catch(err) {
                 handleError(err)
