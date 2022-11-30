@@ -4,7 +4,7 @@ import bCrypt from 'bcryptjs'
 import { Email, VerifyEmail } from './mailer/mailer.js'
 import { LeadEntry, Pricelist, User } from './models.js'
 import { camelize } from './helpers.js'
-const jwtExpiration = Date.now()+(1000*60*60*24) //24 hours
+const jwtExpiration = () => Date.now()+(1000*60*60*24) //24 hours
 const pageOpts = {
     limit: 25,
     lean: true,
@@ -179,16 +179,27 @@ export const Devices = {
     },
 }
 export const Users = {
-    validateToken: (token) => {
+    validateToken: (t) => {
         try {
-            return jwt.verify(token, process.env.JWT_SECRET)
+            let receivedToken = jwt.verify(t, process.env.JWT_SECRET)
+            let token
+            if(receivedToken.exp<=Date.now()-(1000*60*10)){ // 10 minutes
+                token = jwt.sign(
+                    {
+                        id:receivedToken.id,
+                        username:receivedToken.username,
+                        exp:jwtExpiration()
+                    }
+                )
+            }
+            else token = receivedToken
+            return token
         } catch (e) {
             return undefined
         }
     },
     verifyEmail: async (token) => {
         const validToken = Users.validateToken(token)
-        console.log(validToken)
         if (!validToken) throw 'Token invalid or expired'
         const user = await User.findById(validToken.id)
         if (!user) throw 'User not found'
@@ -232,7 +243,7 @@ export const Users = {
                 },
                 process.env.JWT_SECRET
             )
-            const email = new VerifyEmail(user.username,token,jwtExpiration)
+            const email = new VerifyEmail(user.username,token,jwtExpiration())
             await email.send()
             res.json({
                 message: 'Check your email for a link to verify your account',
@@ -261,7 +272,7 @@ export const Users = {
                         {
                          id:user._id,
                          username:user.username,
-                         exp:jwtExpiration
+                         exp:jwtExpiration()
                         },
                         process.env.JWT_SECRET
                     )
