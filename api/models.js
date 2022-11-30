@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
+import schedule from 'node-schedule'
 mongoose.connect(process.env.MONGO_URI)
 const db = mongoose.connection
 db.on('error', () => {
@@ -155,7 +156,7 @@ userSchema.plugin(mongoosePaginate)
 export const User = mongoose.model('User', userSchema)
 
 // Scrub users who have not verified in 1-hour, check every hour
-const invalidUsers = async()=>{
+schedule.scheduleJob('00 * * * *',async()=>{
     let list = []
     let users = await User.find({verified:false})
     users.forEach(user=>{
@@ -166,6 +167,4 @@ const invalidUsers = async()=>{
     })
     list.forEach(async(userId)=>{await User.findByIdAndDelete(userId)})
     console.log('Unverified users scrubbed: ',list.length)
-}
-invalidUsers()
-setInterval(invalidUsers,1000*60*60) // 1 hour
+})
