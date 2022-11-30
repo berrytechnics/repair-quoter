@@ -191,9 +191,7 @@ export const Users = {
             const user = await User.findById(userID)
             req.user = user
             next()
-        } catch (err) {
-            res.json({ error: err })
-        }
+        } catch (err) {next(err)}
     },
     getToken: async (user) => {
         if (!user.username || !user.password) throw 'Missing Credentials'

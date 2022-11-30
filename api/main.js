@@ -9,8 +9,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/', routes)
 app.use((err, req, res, next) => {
-    err ? console.log(err) : null
-    !err ? next() : res.status(500).send(err)
+    if(!err) next()
+    res.json({error:err})
 })
 app.all('*', (req, res) => res.sendStatus(400))
 app.listen(process.env.PORT, () => {
