@@ -9,8 +9,9 @@ Project development begain in November of 2022 and is ongoing.
 
 ## Features
 - Automatic email responses with templates.
-- Includes frontend with user management and verification.
-- Automatically removes users not verified.
+- Includes frontend example to use on an existing website.
+- Includes employee followup tracking with user management.
+- Automatically removes users not verified via email.
 - Customizable to suit your brand.
 - Lightweight and can run on anything javascript can run on.
 
@@ -18,7 +19,7 @@ Project development begain in November of 2022 and is ongoing.
 
 - An [SMTP](https://kinsta.com/blog/gmail-smtp-server/) mail host to send quote emails.
 - A [MongoDB](https://www.mongodb.com/atlas/database) database to store the repair pricelist and leads.
-- Properly configured environment variables. [*see below](#environment-variables)
+- Properly configured environment variables. [*see below](#setup)
 
 ## Install
 
