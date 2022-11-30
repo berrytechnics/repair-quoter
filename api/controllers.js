@@ -195,22 +195,22 @@ export const Users = {
             res.json({ error: err })
         }
     },
-    getToken: async (username, password) => {
-        if (!username || !password) throw 'Missing Credentials'
-        let user = await User.findOne({ username: username })
+    getToken: async (user) => {
+        if (!user.username || !user.password) throw 'Missing Credentials'
+        let foundUser = await User.findOne({ username: user.username })
         if (!user) throw 'User not found'
-        if (!bCrypt.compareSync(password, user.password))
+        if (!bCrypt.compareSync(user.password, foundUser.password))
             throw 'Invalid Credentials'
         let token = jwt.sign(
             {
-                id: user._id,
-                username: user.username,
+                id: foundUser._id,
+                username: foundUser.username,
                 exp: jwtExpiration(),
             },
             process.env.JWT_SECRET
         )
         return {
-            username: user.username,
+            username: foundUser.username,
             token: token,
         }
     },

@@ -93,7 +93,13 @@ router
 // user
 router
     .post('/login', async (req, res) => {
-        res.json(await Users.getToken(req.body.username, req.body.password))
+        try{
+            res.json(await Users.getToken({
+                username:req.body.username, 
+                password:req.body.password
+            }))
+        }
+        catch(err){res.json({error:err})}
     })
     .post('/register', async (req, res) => {
         req.body.password !== req.body.password2
