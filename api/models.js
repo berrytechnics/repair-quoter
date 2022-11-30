@@ -1,5 +1,12 @@
 import mongoose from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
+mongoose.connect(process.env.MONGO_URI)
+const db = mongoose.connection
+db.on('error', () => {
+    console.log('Database connection error...')
+    process.exit(1)
+})
+db.once('open', () => console.log('API Database connected...'))
 
 const leadSchema = new mongoose.Schema({
     firstName: {
@@ -139,10 +146,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    verified:{
-        type:Boolean,
-        default:false
-    }
+    verified: {
+        type: Boolean,
+        default: false,
+    },
 })
 userSchema.plugin(mongoosePaginate)
 export const User = mongoose.model('User', userSchema)

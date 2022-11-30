@@ -1,7 +1,7 @@
 import C from './constants.js'
 import jwt from 'jsonwebtoken'
 import bCrypt from 'bcryptjs'
-import { Email,VerifyEmail } from './mailer/mailer.js'
+import { Email, VerifyEmail } from './mailer/mailer.js'
 import { LeadEntry, Pricelist, User } from './models.js'
 import { camelize } from './helpers.js'
 const pageOpts = {
@@ -178,29 +178,30 @@ export const Devices = {
     },
 }
 export const Users = {
-    validateToken:(token)=>{
-        return jwt.verify(token,process.env.JWT_SECRET)
+    validateToken: (token) => {
+        try{
+            return jwt.verify(token, process.env.JWT_SECRET)
+        }
+        catch(err){return undefined}
     },
-    verifyEmail:async(token)=>{
+    verifyEmail: async (token) => {
         const validToken = Users.validateToken(token)
+        if(!validToken) throw 'Token invalid or expired'
         const user = await User.findById(validToken.id)
-        if(!user) throw 'User not found'
-        user.verified = true;
+        if (!user) throw 'User not found'
+        user.verified = true
         await user.save()
         return user
     },
     auth: async (req, res, next) => {
-        if (!req.headers || !req.headers.authorization)
-            res.json({ error: 'Token not received' })
-        let authorization = req.headers.authorization
-        let decoded
         try {
-            decoded = Users.validateToken(authorization)
-        } catch (err) {
-            res.json({ error: err })
-        }
-        let userID = decoded.id
-        try {
+            if (!req.headers || !req.headers.authorization) {
+                throw 'Token not received'
+            }
+            let authorization = req.headers.authorization
+            let decoded = Users.validateToken(authorization)
+            if(!decoded) throw 'Invalid Token'
+            let userID = decoded.id
             const user = await User.findById(userID)
             req.user = user
             next()
@@ -211,7 +212,7 @@ export const Users = {
     register: async (req, res) => {
         try {
             let user
-            if (!req.body.username || !req.body.password){
+            if (!req.body.username || !req.body.password) {
                 throw 'Missing Parameters'
             }
             user = await User.findOne({ username: req.body.username })
@@ -224,9 +225,14 @@ export const Users = {
                 { id: user._id, username: user.username },
                 process.env.JWT_SECRET
             )
-            const email = new VerifyEmail(user.username,token)
+            const email = new VerifyEmail(user.username, token)
             await email.send()
-            res.json({ message:"Check your email for a link to verify your account",id: user._id, user: user.username, registered: true })
+            res.json({
+                message: 'Check your email for a link to verify your account',
+                id: user._id,
+                user: user.username,
+                registered: true,
+            })
         } catch (err) {
             res.json({ error: err })
         }
@@ -234,15 +240,16 @@ export const Users = {
     getToken: async (req, res) => {
         try {
             let user
-            if (!req.body.username || !req.body.password)
-                res.json({ error: 'Missing Parameters' })
+            if (!req.body.username || !req.body.password) {
+                throw 'Missing Parameters'
+            }
             user = await User.findOne({ username: req.body.username })
-            if (!user) res.json({ error: 'User not found' })
+            if (!user) throw 'User not found'
             else {
-                if(!user.verified) res.json({error:"User not verified"})
-                if (!bCrypt.compareSync(req.body.password, user.password))
-                    res.json({ error: 'Wrong Password' })
-                else {
+                if (!user.verified) throw 'User not verified'
+                if (!bCrypt.compareSync(req.body.password, user.password)) {
+                    throw 'Incorrect Username or Password'
+                } else {
                     let token = jwt.sign(
                         { id: user._id, username: user.username },
                         process.env.JWT_SECRET
@@ -254,4 +261,13 @@ export const Users = {
             res.json({ error: err })
         }
     },
+    removeUser:async(req,res)=>{
+        const validToken = Users.validateToken(req.headers.authorization)
+        try{
+            if(!validToken) throw 'Invalid Token'
+            await User.findByIdAndRemove(validToken.id)
+            res.json({message:"User deleted"})
+        }
+        catch(err){res.json({error:err})}
+    }
 }

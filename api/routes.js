@@ -103,12 +103,11 @@ router
     .all('/user', Users.auth, (req, res) => {
         res.json({ message: 'User Authorized', user: req.user })
     })
-    .get('/verify/:token',async(req,res,next)=>{
-        try{
+    .get('/verify/:token', async (req, res) => {
+        try {
             const user = await Users.verifyEmail(req.params.token)
             res.send(`Your account has been verified ${user.username}`)
-        }
-        catch(err){
+        } catch (err) {
             res.send(`We were unable to verify your account! ERROR: ${err}`)
         }
     })
