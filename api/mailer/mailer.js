@@ -70,9 +70,7 @@ class VerifyEmail {
                 this.token
             }">Verify your account</a>
             <br />
-            <p>This link will expire at ${new Date(
-                this.expiration
-            ).toLocaleString()}</p>
+            <p>This link will expire in 1 hour</p>
             `,
         })
         return false

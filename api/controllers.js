@@ -4,7 +4,7 @@ import bCrypt from 'bcryptjs'
 import { Email, VerifyEmail } from './mailer/mailer.js'
 import { LeadEntry, Pricelist, User } from './models.js'
 import { camelize } from './helpers.js'
-const jwtExpiration = () => Date.now() + 1000 * 60 * 60 * 24 //24 hours
+const jwtExpiration = () => Date.now() + 1000 * 60 * 60 //1 hour
 const pageOpts = {
     limit: 25,
     lean: true,

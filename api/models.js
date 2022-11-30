@@ -153,3 +153,19 @@ const userSchema = new mongoose.Schema({
 })
 userSchema.plugin(mongoosePaginate)
 export const User = mongoose.model('User', userSchema)
+
+// Scrub users who have not verified in 1-hour, check every hour
+const invalidUsers = async()=>{
+    let list = []
+    let users = await User.find({verified:false})
+    users.forEach(user=>{
+        let date = user._id.getTimestamp().toISOString()
+        if(date<new Date(Date.now()-(1000*60*60)).toISOString()){ // 1-hour
+            list.push(user._id)
+        }
+    })
+    list.forEach(async(userId)=>{await User.findByIdAndDelete(userId)})
+    console.log('Unverified users scrubbed: ',list.length)
+}
+invalidUsers()
+setInterval(()=>invalidUsers(),1000*60) // 1 hour
