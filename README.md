@@ -16,7 +16,9 @@ Project development begain in November of 2022 and is ongoing.
 
 ## Prerequisites
 
-repair-quoter requires access to an [SMTP](https://kinsta.com/blog/gmail-smtp-server/) mail host to send quote emails, as well as a [MongoDB](https://www.mongodb.com/atlas/database) database to store the repair pricelist and leads.
+- An [SMTP](https://kinsta.com/blog/gmail-smtp-server/) mail host to send quote emails.
+- A [MongoDB](https://www.mongodb.com/atlas/database) database to store the repair pricelist and leads.
+- Properly configured environment variables. [*see below](#environment-variables)
 
 ## Install
 
