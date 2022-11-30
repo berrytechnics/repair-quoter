@@ -4,7 +4,7 @@ import bCrypt from 'bcryptjs'
 import { Email, VerifyEmail } from './mailer/mailer.js'
 import { LeadEntry, Pricelist, User } from './models.js'
 import { camelize } from './helpers.js'
-const jwtExpiration = () => Date.now()+(1000*60*60*24) //24 hours
+const jwtExpiration = () => Date.now() + 1000 * 60 * 60 * 24 //24 hours
 const pageOpts = {
     limit: 25,
     lean: true,
@@ -179,34 +179,6 @@ export const Devices = {
     },
 }
 export const Users = {
-    validateToken: (token) => {
-        try {
-            let receivedToken = jwt.verify(token, process.env.JWT_SECRET)
-            let resultToken
-            if(receivedToken.exp<=Date.now()-(1000*60*10)){ // 10 minutes
-                resultToken = jwt.sign(
-                    {
-                        id:receivedToken.id,
-                        username:receivedToken.username,
-                        exp:jwtExpiration()
-                    }
-                )
-            }
-            else resultToken = receivedToken
-            return resultToken
-        } catch (e) {
-            return undefined
-        }
-    },
-    verifyEmail: async(token) => {
-        const validToken = Users.validateToken(token)
-        if (!validToken) throw 'Token invalid or expired'
-        const user = await User.findById(validToken.id)
-        if (!user) throw 'User not found'
-        user.verified = true
-        await user.save()
-        return user
-    },
     auth: async (req, res, next) => {
         try {
             if (!req.headers || !req.headers.authorization) {
@@ -223,23 +195,42 @@ export const Users = {
             res.json({ error: err })
         }
     },
-    register:async(user)=>{
-        if(!user.username||!user.password) throw 'Missing Parameters'
-        let foundUser = await User.findOne({username:user.username})
-        if(foundUser) throw 'User already exists'
-        let newUser = await User.create({
-            username:user.username,
-            password:bCrypt.hashSync(req.body.password,10)
-        })
+    getToken: async (username, password) => {
+        if (!username || !password) throw 'Missing Credentials'
+        let user = await User.findOne({ username: username })
+        if (!user) throw 'User not found'
+        if (!bCrypt.compareSync(password, user.password))
+            throw 'Invalid Credentials'
         let token = jwt.sign(
             {
-                id:newUser._id,
-                username:newUser.username,
-                exp:jwtExpiration()
+                id: user._id,
+                username: user.username,
+                exp: jwtExpiration(),
             },
             process.env.JWT_SECRET
         )
-        const email = new VerifyEmail(newUser.username,token,jwtExpiration())
+        return {
+            username: user.username,
+            token: token,
+        }
+    },
+    register: async (user) => {
+        if (!user.username || !user.password) throw 'Missing Parameters'
+        let foundUser = await User.findOne({ username: user.username })
+        if (foundUser) throw 'User already exists'
+        let newUser = await User.create({
+            username: user.username,
+            password: bCrypt.hashSync(user.password, 10),
+        })
+        let token = jwt.sign(
+            {
+                id: newUser._id,
+                username: newUser.username,
+                exp: jwtExpiration(),
+            },
+            process.env.JWT_SECRET
+        )
+        const email = new VerifyEmail(newUser.username, token, jwtExpiration())
         await email.send()
         return {
             message: 'Check your email for a link to verify your account',
@@ -248,28 +239,36 @@ export const Users = {
             registered: true,
         }
     },
-    getToken:async(username,password)=>{
-        if(!username||!password) throw 'Missing Credentials'
-        let user = await User.findOne({username:username})
-        if(!user) throw 'User not found'
-        if(!bCrypt.compareSync(password,user.password)) throw 'Invalid Credentials'
-        let token = jwt.sign(
-            {
-                id:user._id,
-                username:user.username,
-                exp:jwtExpiration()
-            },
-            process.env.JWT_SECRET
-        )
-        return {
-            username:user.username,
-            token:token
+    removeUser: async (token) => {
+        const validToken = Users.validateToken(token)
+        if (!validToken) throw 'Invalid Token'
+        await User.findByIdAndRemove(validToken.id)
+        return { message: 'User Deleted' }
+    },
+    validateToken: (token) => {
+        try {
+            let receivedToken = jwt.verify(token, process.env.JWT_SECRET)
+            let resultToken
+            if (receivedToken.exp <= Date.now() - 1000 * 60 * 10) {
+                // 10 minutes
+                resultToken = jwt.sign({
+                    id: receivedToken.id,
+                    username: receivedToken.username,
+                    exp: jwtExpiration(),
+                })
+            } else resultToken = receivedToken
+            return resultToken
+        } catch (e) {
+            return undefined
         }
     },
-    removeUser:async(token)=>{
+    verifyEmail: async (token) => {
         const validToken = Users.validateToken(token)
-        if(!validToken) throw 'Invalid Token'
-        await User.findByIdAndRemove(validToken.id)
-        return {message:"User Deleted"}
+        if (!validToken) throw 'Token invalid or expired'
+        const user = await User.findById(validToken.id)
+        if (!user) throw 'User not found'
+        user.verified = true
+        await user.save()
+        return user
     },
 }

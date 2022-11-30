@@ -4,7 +4,6 @@ import ejs from 'ejs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { lookup } from '../helpers.js'
-import exp from 'constants'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 class Email {
@@ -67,9 +66,13 @@ class VerifyEmail {
             to: this.to,
             subject: 'Verify your account!',
             html: `
-            <a href="${process.env.DOMAIN}/verify/${this.token}">Verify your account</a>
+            <a href="${process.env.DOMAIN}/verify/${
+                this.token
+            }">Verify your account</a>
             <br />
-            <p>This link will expire at ${new Date(this.expiration).toLocaleString()}</p>
+            <p>This link will expire at ${new Date(
+                this.expiration
+            ).toLocaleString()}</p>
             `,
         })
         return false
