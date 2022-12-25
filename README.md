@@ -1,7 +1,7 @@
 # repair-quoter
 
 ## Description
-**repair-quoter a complete cellphone and electronics repair industry leads generating widget.**
+**repair-quoter is a dockerized, complete cellphone and electronics repair industry lead generation widget.**
 
 It is capable of collecting, storing, replying to, and tracking website leads via quoting for device repairs.
 
@@ -14,12 +14,7 @@ Project development begain in November of 2022 and is ongoing.
 - Automatically removes users not verified via email.
 - Customizable to suit your brand.
 - Lightweight and can run on anything javascript can run on.
-
-## Prerequisites
-
-- An [SMTP](https://kinsta.com/blog/gmail-smtp-server/) mail host to send quote emails.
-- A [MongoDB](https://www.mongodb.com/atlas/database) database to store the repair pricelist and leads.
-- Properly configured environment variables. [*see below](#setup)
+- Runs in Docker conatiner.
 
 ## Install
 
@@ -39,34 +34,28 @@ The `api/constants.js` file contains a simple template to configure the api for 
 
 ### Environment Variables
 
-repair-quoter uses [dotenv](https://www.npmjs.com/package/dotenv) as a dev-dependency.
 
 repair-quoter uses the following [environment variables](https://devcenter.heroku.com/articles/node-best-practices) to connect to your database and to send emails through your smtp host.
 
 > Your Environment variables _could_ look something like this:
 
 ```
-PORT = 4200 // this is the port for the development server
-TESTEMAIL = "test@test.test" /* this is the email address test emails are sent to */
-MONGO_URI = "mongodb+srv://<user>:<password>@cluster0.exampleURI.mongodb.net/?retryWrites=true&w=majority"
-EMAIL_HOST = "smtp.emailhost.com"
+EMAIL_HOST = smtp.yourmailserver.com
 EMAIL_PORT = 587
-EMAIL_USER = "user@emailhost.com"
-EMAIL_PASS = "userPassword"
-JWT_SECRET = < secret string for JSON web tokens >
+EMAIL_USER = user@emailhost.com
+EMAIL_PASS = userPassword
+DB_HOST=database
+MYSQL_USER=app
+MYSQL_PASSWORD=1%ranSTring!k6i4hdu322o
+MYSQL_DATABASE=data
+MYSQL_RANDOM_ROOT_PASSWORD=forSure
+JWT_SECRET=klj2j44@hdf458~df4
+
 ```
 
 ## Usage
-
-Start API
- ```
- npm run serve:api
- ```
-
-Start Client 
-```
-npm run serve:client
-```
+### repair-quoter requires [Docker](https://docs.docker.com/get-docker/)
+``` Yarn dev ``` or ``` npm run dev ```
 
 ## Client
 `client/widget.html` contains a simple working frontend for the api. This file MUST be served via an http server. Otherwise, you will experience a [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors) error.

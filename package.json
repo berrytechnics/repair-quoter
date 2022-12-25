@@ -6,6 +6,7 @@
     "type": "module",
     "main": "api/main.js",
     "scripts": {
+        "dev": "docker system prune --force && docker-compose build && docker-compose up",
         "start": "node api/main.js",
         "build": "prettier --write ./api/ && eslint --fix ./api/",
         "format:check": "prettier --check ./api/",
@@ -23,21 +24,20 @@
     "license": "GPL-3.0-only",
     "dependencies": {
         "bcryptjs": "2.4.3",
-        "body-parser": "1.20.1",
         "cors": "2.8.5",
         "ejs": "3.1.8",
         "express": "4.18.2",
         "express-session": "1.17.3",
         "html-to-text": "8.2.1",
         "jsonwebtoken": "8.5.1",
-        "mongoose": "6.7.2",
         "mongoose-paginate-v2": "1.7.1",
+        "mysql2": "^2.3.3",
         "node-schedule": "2.1.0",
-        "nodemailer": "6.8.0"
+        "nodemailer": "6.8.0",
+        "sequelize": "^6.28.0"
     },
     "devDependencies": {
         "chalk": "5.1.2",
-        "dotenv": "16.0.3",
         "eslint": "8.28.0",
         "eslint-config-prettier": "8.5.0",
         "nodemon": "2.0.20",

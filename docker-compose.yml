@@ -1,0 +1,33 @@
+version: '3'
+services:
+  api:
+    container_name: repair-quoter-api
+    environment:
+      - MYSQL_DATABASE
+      - DB_HOST
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - JWT_SECRET
+      - EMAIL_HOST
+      - EMAIL_PORT
+      - EMAIL_USER
+      - EMAIL_PASS
+    ports:
+      - 80:4200
+    depends_on:
+      - database
+    build: .
+  database:
+    container_name: repair-quoter-database
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_RANDOM_ROOT_PASSWORD
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    ports:
+      - 3306
+    image: mysql
+    volumes:
+      - repair-quoter-dbstore:/var/lib/mysql
+volumes:
+  repair-quoter-dbstore:

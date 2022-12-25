@@ -1,19 +1,21 @@
-import 'dotenv/config'
 import express from 'express'
-import bodyParser from 'body-parser'
-import cors from 'cors'
+import {sequelize} from './database.js'
 import routes from './routes.js'
 const app = express()
-app.use(cors())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/', routes)
 app.use((err, req, res, next) => {
-    if (!err) next()
-    res.json({ error: err })
+    err ?
+    res.json(err.stack) :
+    res.json({error:'An unknown error occurred!'})
 })
-app.all('*', (req, res) => res.json({ error: 'Unknown Error' }))
-app.listen(process.env.PORT, () => {
-    console.log(`API Server Listening on ${process.env.PORT}...`)
+app.listen(process.env.PORT, async() => {
+    try{
+        await sequelize.sync({force:true})
+        console.log(`Server started...`)
+    }
+    catch(e){
+        console.error(e.stack)
+        process.exit(1)
+    }
 })
 export default app
