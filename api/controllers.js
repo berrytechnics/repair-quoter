@@ -10,20 +10,19 @@ export class Lead{
         this.make=make
         this.model=model
         this.issue=issue
-        this.price
-        this.date
+        this.id=null
+        this.price=0
         this.emailed
         this.responded
         this.converted
-        this.id
     }
     async getPrice(){
         // const pricelist = await PriceListModel.findOne({where:{model:this.model}})
         // return this.price = pricelist[this.issue]
-        return this.price = 19.99
+        this.price = 19.99
     }
     async emailQuote(){
-        return this.emailed = true
+        this.emailed = true
     }
     async record(){
         await this.getPrice()
@@ -36,7 +35,7 @@ export class Lead{
             },
             defaults:this
         })
-        this.id = recordedLead.id
+        for(const [key, val] of Object.entries(recordedLead[0].dataValues)) this[key] = val
         return this
     }
     async update(){
