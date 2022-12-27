@@ -15,3 +15,18 @@ export const LeadModel = sequelize.define('Lead',{
     responded:DataTypes.BOOLEAN,
     converted:DataTypes.BOOLEAN
 })
+
+export const PriceListModel = sequelize.define('PriceList',{
+    type:DataTypes.STRING,
+    make:DataTypes.STRING,
+    model:DataTypes.STRING,
+    digitizer:DataTypes.FLOAT,
+    lcd:DataTypes.FLOAT,
+    battery:DataTypes.FLOAT,
+    chargePort:DataTypes.FLOAT,
+    rearCamera:DataTypes.FLOAT,
+    frontCamera:DataTypes.FLOAT,
+    earSpeaker:DataTypes.FLOAT,
+    loudSpeaker:DataTypes.FLOAT,
+    rearGlass:DataTypes.FLOAT
+})
