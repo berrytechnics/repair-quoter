@@ -17,5 +17,24 @@
       "form": []
     },
     "tests": []
+  },
+  {
+    "_id": "ad65b142-e0ca-411a-9b1d-1833e6310d8f",
+    "colId": "history",
+    "containerId": "",
+    "name": "localhost/priceTest",
+    "url": "localhost/priceTest",
+    "method": "POST",
+    "sortNum": 0,
+    "created": "2022-12-28T00:22:40.788Z",
+    "modified": "2022-12-28T00:33:46.716Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"type\":\"phone\",\n  \"make\":\"Apple\",\n  \"model\":\"iPhonmjhje 12\",\n  \"digitizer\":5.0,\n  \"lcd\":1.0,\n  \"battery\":1.0,\n  \"chargePort\":1.0,\n  \"rearCamera\":1.0,\n  \"frontCamera\":1.0,\n  \"earSpeaker\":1.0,\n  \"loudSpeaker\":1.0,\n  \"rearGlass\":1.0\n}",
+      "form": []
+    },
+    "tests": []
   }
 ]

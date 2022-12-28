@@ -1,26 +1,35 @@
 import { LeadModel, PriceListModel } from "./models.js";
-
 export class PriceList{
     constructor(type,make,model,digitizer,lcd,battery,chargePort,rearCamera,frontCamera,earSpeaker,loudSpeaker,rearGlass){
-            type=this.type
-            make=this.make
-            model=this.model
-            digitizer=this.digitizer
-            lcd=this.lcd
-            battery=this.battery
-            chargePort=this.chargePort
-            rearCamera=this.rearCamera
-            frontCamera=this.frontCamera
-            earSpeaker=this.earSpeaker
-            loudSpeaker=this.loudSpeaker
-            rearGlass=this.rearGlass
+            this.type=type
+            this.make=make
+            this.model=model
+            this.digitizer=digitizer
+            this.lcd=lcd
+            this.battery=battery
+            this.chargePort=chargePort
+            this.rearCamera=rearCamera
+            this.frontCamera=frontCamera
+            this.earSpeaker=earSpeaker
+            this.loudSpeaker=loudSpeaker
+            this.rearGlass=rearGlass
     }
-    async create(){PriceList.create(this)}
-    async update(){PriceListModel.update(this)}
+    async create(){
+       return PriceListModel.findOrCreate({
+            where:{
+                "type":this.type,
+                "make":this.make,
+                "model":this.model,
+            },
+            defaults:this
+        })
+    }
+    async update(){
+        PriceListModel.update(this)
+    }
     static async remove(id){PriceListModel.remove(id)}
     static async find(id) {PriceListModel.findOne({where:{id:id}})}
 }
-
 export class Lead{
     constructor(firstName,lastName,location,email,phone,make,model,issue){
         this.firstName=firstName
